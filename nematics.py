@@ -201,12 +201,13 @@ def dirich_sparse_matrix():
 
 # #### Find $\psi$ from $\omega$:
 
+# @jit
 def sparse_solver(w , sparse_matrix):
     lin_w = np.zeros((mesh_size[0] * mesh_size[1]))
     for i in range (1,mesh_size[0]-1):
         for j in range(1,mesh_size[1]-1):
             lin_w[pos_find(i,j)]= - w[i][j]
-    return spsolve(sparse_matrix , lin_w)
+    return spsolve(sparse_matrix , lin_w).reshape((mesh_size)).T
 
 @jit
 def W_boundary(w,psi):
@@ -215,11 +216,6 @@ def W_boundary(w,psi):
     w[-1][:] = -2 *( psi[-2][:] / h2 + V0 / h )
     w[:][-1] = -2 *( psi[:][-2] / h2 + V0 / h )
     return w
-
-@jit
-def ARRANGE(lin_psi):
-    psi = lin_psi.reshape((mesh_size))
-    return psi.T
 
 # #### Laplacian of $\omega$:
 
@@ -488,8 +484,8 @@ def myploter(t,q,w,c,X,Y,sparse_matrix):
     clb = fig.colorbar(ax0,ax=ax[0] , orientation='vertical', shrink=0.5)
     clb.ax.set_title('S')
         
-    lin_psi = sparse_solver(w , sparse_matrix)
-    psi = ARRANGE(lin_psi)
+    psi = sparse_solver(w , sparse_matrix)
+    
     v_x = V_X(psi)
     v_y = V_Y(psi)        
      
