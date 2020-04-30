@@ -1,16 +1,16 @@
-from numba import jit
-from tqdm import tqdm
+import time
+start_time = time.time()
 import numpy as np
 import os
 import sys
-from nematics import dirich_sparse_matrix, export_plot, w_boundary, update, sparse_solver, order_parameter, initial
+from nematics import dirich_sparse_matrix, export_plot, w_boundary, update, sparse_solver, initial
 from CONSTANTS import mesh_size
 import warnings
 warnings.filterwarnings("ignore")
 
 def simulate(sim_time=100):
-    folder_name = 'results' ## here you need to create the folder for saving snapshots
 
+    folder_name = 'results'
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
 
@@ -29,7 +29,7 @@ def simulate(sim_time=100):
     X , Y = np.mgrid[-0:mesh_size[0] , -0:mesh_size[1] ]
     export_plot(0,q,w,c,X,Y,sparse_matrix)
 
-    for t in tqdm(range(1,sim_time+1)):
+    for t in range(1,sim_time+1):
         psi = sparse_solver(w , sparse_matrix)
         # rk1
         w_temp = w_boundary(w_temp,psi)
@@ -61,12 +61,10 @@ def simulate(sim_time=100):
         w = w_temp
         c = c_temp
         
-        ## at this point the system is updated for 1 time step 
-        ## what comes below is up to you. for me, I needed to save figures in myfolder
-        ## Any other manipulation with data can be implemented below
-        
         if (t%50 == 0):
             export_plot(t,q,w,c,X,Y,sparse_matrix)
+            print(t)
 
 if __name__ == '__main__':
-    simulate(10000)
+    simulate(500)
+    print("--- %s seconds ---" % round(time.time() - start_time))
