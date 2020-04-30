@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 21 15:37:39 2020
-
-@author: Mohammad
-"""
-
 from numba import jit
 from tqdm import tqdm
 import os , shutil
@@ -12,40 +5,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import spsolve
-plt.ioff()
-
 
 mesh_size = (80, 80)
-D1 = 1
-D0 = 1
-c_star = 3 * np.pi / 2
-LAMBDA = 0.1
-alpha2 = np.zeros((mesh_size[0],1))
-#O = np.int( ( mesh_size[1] - 1 ) / 2 )
-for i in range(mesh_size[0]):
-    if 15<i<25:
-        alpha2[i]= -0.02 
-    elif i>=25:
-        alpha2[i]= -0.02
-    else:
-        alpha2[i]= -0.02
-alpha1 = np.abs(alpha2)/2
-delta_t = 0.02
-h = 0.4
-h2 = h**2
 
-E = 10*0.5 # I refer u to my thesis for the definition of E & R , they are aftermaths of making the system dimension-less
-R = 0.5**2
-gama = np.int(E/10)
+delta_t = 0.02
 
 folder_name = 'myfolder' ## here you need to create the folder for saving snapshots
 ## just beware of the exact directory in the functions -> myploter -> fig.savefig(...)
 V0 = 0 ## if you have other boundary conditions for velocity field other than no slip
-sparse_matrix = drich_sparse_matrix()
+sparse_matrix = dirich_sparse_matrix()
 
-q_temp = initial()[0]
-c_temp = initial()[1]
-w_temp = initial()[2]
+q_temp, c_temp, w_temp = initial()
 
 q = q_temp
 c = c_temp
@@ -55,7 +25,7 @@ print(s(q[0][0][0],q[0][0][1]))
 w_rk = np.zeros((4,mesh_size[0],mesh_size[1]))
 q_rk = np.zeros((4,mesh_size[0],mesh_size[1],2))
 c_rk = np.zeros((4,mesh_size[0],mesh_size[1]))
-sim_time = 10000
+sim_time = 1000
 plot_number = 0
 X , Y = np.mgrid[-0:mesh_size[0] , -0:mesh_size[1] ]
 myploter(0,q,w,c,X,Y)
@@ -65,8 +35,8 @@ for t in range(sim_time):
   
     if t%5 == 0 and t<20 :
         print (t)
-    for rk_step in range (4):
-            
+        
+    for rk_step in range(4):
         hxx = HXX(q_temp,c_temp)
         hxy = HXY(q_temp,c_temp)
         sigma_x_x = SIGMA_X_X(q_temp,hxx,c_temp)
@@ -75,7 +45,6 @@ for t in range(sim_time):
         d2x_sigma_y_x = D2X_SIGMA_Y_X(sigma_y_x)
         d2y_sigma_x_y = D2Y_SIGMA_X_Y(sigma_x_y)
         dxdy_sigma_x_x = DXDY_SIGMA_X_X(sigma_x_x)
-    
     
         lin_psi = sparse_solver(w , sparse_matrix)
         psi = ARRANGE(lin_psi)
@@ -87,7 +56,6 @@ for t in range(sim_time):
         uxy = UXY(v_x,v_y)
         dx_q = DX_Q(q_temp)
         dy_q = DY_Q(q_temp)
-    
 
         d2x_qxx = D2X_QXX(q_temp)
         d2y_qxx = D2Y_QXX(q_temp)
@@ -101,11 +69,12 @@ for t in range(sim_time):
         update = UPDATE(hxx , hxy , d2x_sigma_y_x , d2y_sigma_x_y , dxdy_sigma_x_x ,
                         w_temp , lplas_w , v_x , v_y , uxx , uxy , dx_q , dy_q ,
                         d2x_qxx , d2y_qxx ,dxdy_qxy , dy_c , dx_c , d2x_c , d2y_c , dxdy_c )  
+        
         w_rk[rk_step] = update[0]
         q_rk[rk_step] = update[1]
         c_rk[rk_step] = update[2]
-        if rk_step==0 or rk_step==1:
         
+        if rk_step==0 or rk_step==1:
             w_temp = w + w_rk[rk_step] / 2
             q_temp = q + q_rk[rk_step] / 2
             c_temp = c + c_rk[rk_step] / 2
@@ -114,12 +83,11 @@ for t in range(sim_time):
             w_temp = w + w_rk[rk_step] 
             q_temp = q + q_rk[rk_step] 
             c_temp = c + c_rk[rk_step]    
-            
          
     q_temp = q + (q_rk[0] + 2 * q_rk[1] + 2 * q_rk[2] + q_rk[3])/6
     w_temp = w + (w_rk[0] + 2 * w_rk[1] + 2 * w_rk[2] + w_rk[3])/6
     c_temp = c + (c_rk[0] + 2 * c_rk[1] + 2 * c_rk[2] + c_rk[3])/6
-    #q = q_temp
+    
     q = q_temp
     w = w_temp
     c = c_temp
