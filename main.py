@@ -2,8 +2,7 @@ from numba import jit
 from tqdm import tqdm
 import numpy as np
 import os
-# import matplotlib.pyplot as plt
-from nematics import dirich_sparse_matrix, myploter, W_boundary,UPDATE,sparse_solver,s,initial
+from nematics import dirich_sparse_matrix, export_plot, w_boundary, update, sparse_solver, order_parameter, initial
 from CONSTANTS import mesh_size
 import warnings
 warnings.filterwarnings("ignore")
@@ -22,42 +21,42 @@ def simulate():
     c = c_temp
     w = w_temp
 
-    print(s(q[0][0][0],q[0][0][1]))
+    print(order_parameter(q[0][0][0],q[0][0][1]))
     w_rk = np.zeros((4,mesh_size[0],mesh_size[1]))
     q_rk = np.zeros((4,mesh_size[0],mesh_size[1],2))
     c_rk = np.zeros((4,mesh_size[0],mesh_size[1]))
     sim_time = 100
-    plot_number = 0
+
     X , Y = np.mgrid[-0:mesh_size[0] , -0:mesh_size[1] ]
-    myploter(0,q,w,c,X,Y,sparse_matrix)
+    export_plot(0,q,w,c,X,Y,sparse_matrix)
 
     for t in tqdm(range(1,sim_time+1)):
         # rk1
         lin_psi = sparse_solver(w , sparse_matrix)
         psi = lin_psi.reshape((mesh_size)).T
-        w_temp = W_boundary(w_temp,psi)
-        w_rk[0], q_rk[0], c_rk[0] = UPDATE(q_temp, c_temp, w_temp, psi)    
+        w_temp = w_boundary(w_temp,psi)
+        w_rk[0], q_rk[0], c_rk[0] = update(q_temp, c_temp, w_temp, psi)    
         w_temp = w + w_rk[0] / 2
         q_temp = q + q_rk[0] / 2
         c_temp = c + c_rk[0] / 2
         #rk2
         psi = sparse_solver(w , sparse_matrix)
-        w_temp = W_boundary(w_temp,psi)
-        w_rk[1], q_rk[1], c_rk[1] = UPDATE(q_temp, c_temp, w_temp, psi)    
+        w_temp = w_boundary(w_temp,psi)
+        w_rk[1], q_rk[1], c_rk[1] = update(q_temp, c_temp, w_temp, psi)    
         w_temp = w + w_rk[1] / 2
         q_temp = q + q_rk[1] / 2
         c_temp = c + c_rk[1] / 2
         #rk3
         psi = sparse_solver(w , sparse_matrix)
-        w_temp = W_boundary(w_temp,psi)
-        w_rk[2], q_rk[2], c_rk[2] = UPDATE(q_temp, c_temp, w_temp, psi)
+        w_temp = w_boundary(w_temp,psi)
+        w_rk[2], q_rk[2], c_rk[2] = update(q_temp, c_temp, w_temp, psi)
         w_temp = w + w_rk[2] 
         q_temp = q + q_rk[2] 
         c_temp = c + c_rk[2] 
         #rk4
         psi = sparse_solver(w , sparse_matrix)
-        w_temp = W_boundary(w_temp,psi)
-        w_rk[3], q_rk[3], c_rk[3] = UPDATE(q_temp, c_temp, w_temp, psi)
+        w_temp = w_boundary(w_temp,psi)
+        w_rk[3], q_rk[3], c_rk[3] = update(q_temp, c_temp, w_temp, psi)
         #rk sum
         q_temp = q + (q_rk[0] + 2 * q_rk[1] + 2 * q_rk[2] + q_rk[3])/6
         w_temp = w + (w_rk[0] + 2 * w_rk[1] + 2 * w_rk[2] + w_rk[3])/6
@@ -73,7 +72,7 @@ def simulate():
         
         
         if (t%50 == 0):
-            myploter(t,q,w,c,X,Y,sparse_matrix)
+            export_plot(t,q,w,c,X,Y,sparse_matrix)
 
 if __name__ == '__main__':
     simulate()

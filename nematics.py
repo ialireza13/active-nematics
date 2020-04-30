@@ -32,7 +32,7 @@ def n (a):
 # #### Find $S$ (order parameter):
 
 @jit           
-def s(xx,xy): 
+def order_parameter(xx,xy): 
     return (np.sqrt(xx ** 2 + xy ** 2) ) * 2
 
 # #### Calculate $h_{xx}$ or $h_{xy}$ for all points:
@@ -127,20 +127,20 @@ def HXY(q,c):
 @jit
 def SIGMA_X_X(q,hxx,c):
     sigma_x_x = np.zeros((mesh_size))
-    sigma_x_x[:,:] = ( -LAMBDA * s(q[:,:,0],q[:,:,1]) * hxx[:,:] + alpha2[:][0] * (c[:,:]**2) * q[:,:,0] ) 
+    sigma_x_x[:,:] = ( -LAMBDA * order_parameter(q[:,:,0],q[:,:,1]) * hxx[:,:] + alpha2[:][0] * (c[:,:]**2) * q[:,:,0] ) 
     return sigma_x_x 
 
 @jit
 def SIGMA_X_Y(q,hxx,hxy,c):
     sigma_x_y = np.zeros((mesh_size))    
-    sigma_x_y[:,:] = ( -LAMBDA * s(q[:,:,0],q[:,:,1]) * hxy[:,:] +
+    sigma_x_y[:,:] = ( -LAMBDA * order_parameter(q[:,:,0],q[:,:,1]) * hxy[:,:] +
         alpha2[:,0] * (c[:,:]**2) * q[:,:,1] + 2 * ( (q[:,:,0]) * hxy[:,:] - (q[:,:,1]) * hxx[:,:] ))
     return sigma_x_y
 
 @jit
 def SIGMA_Y_X(q,hxx,hxy,c):
     sigma_y_x = np.zeros((mesh_size))    
-    sigma_y_x[:,:] = ( -LAMBDA * s(q[:,:,0],q[:,:,1]) * hxy[:,:] +
+    sigma_y_x[:,:] = ( -LAMBDA * order_parameter(q[:,:,0],q[:,:,1]) * hxy[:,:] +
         alpha2[:,0] * (c[:,:]**2) * q[:,:,1] + 2 * ( (q[:,:,1]) * hxx[:,:] - (q[:,:,0]) * hxy[:,:] ))
     return sigma_y_x
 
@@ -210,7 +210,7 @@ def sparse_solver(w , sparse_matrix):
     return spsolve(sparse_matrix , lin_w).reshape((mesh_size)).T
 
 @jit
-def W_boundary(w,psi):
+def w_boundary(w,psi):
     w[0][:] = -2 *( psi[1][:] / h2 + V0 / h )
     w[:][0] = -2 *( psi[:][1] / h2 + V0 / h )
     w[-1][:] = -2 *( psi[-2][:] / h2 + V0 / h )
@@ -220,7 +220,7 @@ def W_boundary(w,psi):
 # #### Laplacian of $\omega$:
 
 @jit
-def LPLAS_W(w):
+def w_laplace(w):
     lpls_w = np.zeros((mesh_size))
     lpls_w[1:-1,1:-1] = ( w[2:,1:-1] + w[:-2,1:-1] - 4 * w[1:-1,1:-1] + w[1:-1,2:] + w[1:-1,:-2] )
     return lpls_w
@@ -250,7 +250,6 @@ def UXY(v_x,v_y):
     uxy = np.zeros((mesh_size))
     uxy[1:-1,1:-1] = ( v_y[2:,1:-1] - v_y[:-2,1:-1] + v_x[1:-1,2:] - v_x[1:-1,:-2] ) /  h_h_h_h
     return uxy
-
 
 # #### Derivatives of $Q$:
 
@@ -368,7 +367,7 @@ def pos_find(i,j):
     return j*mesh_size[0] + i
 
 @jit            
-def UPDATE(q_temp, c_temp, w_temp, psi):
+def update(q_temp, c_temp, w_temp, psi):
     
     hxx = HXX(q_temp,c_temp)
     hxy = HXY(q_temp,c_temp)
@@ -379,7 +378,7 @@ def UPDATE(q_temp, c_temp, w_temp, psi):
     d2y_sigma_x_y = D2Y_SIGMA_X_Y(sigma_x_y)
     dxdy_sigma_x_x = DXDY_SIGMA_X_X(sigma_x_x)
     
-    lplas_w = LPLAS_W(w_temp)    
+    lplas_w = w_laplace(w_temp)    
     
     v_x = V_X(psi)
     v_y = V_Y(psi)            
@@ -411,11 +410,11 @@ def UPDATE(q_temp, c_temp, w_temp, psi):
     w_rk[1:-1,1:-1] = delta_t* ( E* lplas_w[1:-1,1:-1] + R* (d2x_sigma_y_x[1:-1,1:-1]
         - 2 * dxdy_sigma_x_x[1:-1,1:-1] - d2y_sigma_x_y[1:-1,1:-1]) )
     
-    q_rk[1:-1,1:-1,0] = delta_t * ( LAMBDA * s(q_temp[1:-1,1:-1,0] , q_temp[1:-1,1:-1,1]) * uxx[1:-1,1:-1]
+    q_rk[1:-1,1:-1,0] = delta_t * ( LAMBDA * order_parameter(q_temp[1:-1,1:-1,0] , q_temp[1:-1,1:-1,1]) * uxx[1:-1,1:-1]
         + hxx[1:-1,1:-1] -  q_temp[1:-1,1:-1,1]  * w_temp[1:-1,1:-1] - v_x[1:-1,1:-1] * dx_q[1:-1,1:-1,0] - 
         v_y[1:-1,1:-1] * dy_q[1:-1,1:-1,0])
 
-    q_rk[1:-1,1:-1,1] = delta_t * ( LAMBDA * s(q_temp[1:-1,1:-1,0] , q_temp[1:-1,1:-1,1]) * uxy[1:-1,1:-1]
+    q_rk[1:-1,1:-1,1] = delta_t * ( LAMBDA * order_parameter(q_temp[1:-1,1:-1,0] , q_temp[1:-1,1:-1,1]) * uxy[1:-1,1:-1]
         + hxy[1:-1,1:-1] +  q_temp[1:-1,1:-1,0] * w_temp[1:-1,1:-1] - v_x[1:-1,1:-1] * dx_q[1:-1,1:-1,1] - 
         v_y[1:-1,1:-1] * dy_q[1:-1,1:-1,1])
 
@@ -432,7 +431,7 @@ def UPDATE(q_temp, c_temp, w_temp, psi):
 
 def defect_detector(q):
     S = np.zeros((mesh_size))
-    S[:,:] = abs( s(q[:,:,0] , q[:,:,1]) )
+    S[:,:] = abs( order_parameter(q[:,:,0] , q[:,:,1]) )
     min_s = np.min(S)
     max_s = np.max(S)
     temp = np.where(S == min_s)
@@ -455,13 +454,12 @@ def ploter(q):
     d = np.zeros((mesh_size[0],mesh_size[1]))    
     for i in range (mesh_size[0]):
         for j in range(mesh_size[1]):
-            d[i][j] = np.abs(s(q[i][j][0],q[i][j][1]))
-        
-            p[0][i][j]=n([q[i][j][0],q[i][j][1]])[0]
-            p[1][i][j]=n([q[i][j][0],q[i][j][1]])[1]
+            d[i][j] = np.abs(order_parameter(q[i][j][0],q[i][j][1]))
+            p[0][i][j], p[1][i][j]=n([q[i][j][0],q[i][j][1]])
+            
     return p , d
 
-def myploter(t,q,w,c,X,Y,sparse_matrix):
+def export_plot(t,q,w,c,X,Y,sparse_matrix):
 #        plt.figure(t,figsize = (16,7))
 #        plot_number =plot_number + 1
     p = ploter(q)[0]
