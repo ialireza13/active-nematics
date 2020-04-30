@@ -199,10 +199,12 @@ def dirich_sparse_matrix():
 # #### Find $\psi$ from $\omega$:
 
 def sparse_solver(w , sparse_matrix):
-    lin_w = np.zeros((mesh_size[0] * mesh_size[1]))
-    for i in range (1,mesh_size[0]-1):
-        for j in range(1,mesh_size[1]-1):
-            lin_w[pos_find(i,j)]= - w[i][j]
+    lin_w = -w.T
+    lin_w[:,0] = 0
+    lin_w[0,:] = 0
+    lin_w[:,-1] = 0
+    lin_w[-1,:] = 0
+    lin_w = lin_w.flatten()
     return spsolve(sparse_matrix , lin_w).reshape((mesh_size)).T
 
 #@jit
