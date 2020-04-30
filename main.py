@@ -1,10 +1,8 @@
 from numba import jit
 from tqdm import tqdm
-import os , shutil
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.sparse import csr_matrix
-from scipy.sparse.linalg import spsolve
+from nematics import *
 
 mesh_size = (80, 80)
 
@@ -31,7 +29,7 @@ X , Y = np.mgrid[-0:mesh_size[0] , -0:mesh_size[1] ]
 myploter(0,q,w,c,X,Y)
 
 
-for t in range(sim_time):
+for t in tqdm(range(sim_time)):
   
     if t%5 == 0 and t<20 :
         print (t)
