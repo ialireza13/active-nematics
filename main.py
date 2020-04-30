@@ -2,9 +2,9 @@ from numba import jit
 from tqdm import tqdm
 import numpy as np
 import os
-import matplotlib.pyplot as plt
-from nematics import *
-from CONSTANTS import *
+# import matplotlib.pyplot as plt
+from nematics import dirich_sparse_matrix, myploter,ARRANGE, W_boundary,UPDATE,sparse_solver,s,initial
+from CONSTANTS import mesh_size
 
 folder_name = 'results' ## here you need to create the folder for saving snapshots
 ## just beware of the exact directory in the functions -> myploter -> fig.savefig(...)

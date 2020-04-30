@@ -21,4 +21,4 @@ h2 = h**2
 
 E = 10*0.5 # aftermaths of making the system dimension-less
 R = 0.5**2
-gamma = np.int(E/10)
+# gamma = np.int(E/10)
