@@ -463,22 +463,21 @@ def export_plot(t,q,w,c,X,Y,sparse_matrix):
 #        plot_number =plot_number + 1
     p,d = ploter(q)
     #plt.subplot(2,4,plot_number)
-    fig, ax = plt.subplots(1, 2 , figsize = (16,7))
-    fig.tight_layout(rect=[0, 0.01, 1, 0.95])
+    fig, ax = plt.subplots(1, 2 , figsize = (8,3.5))
+    fig.tight_layout(rect=[-0.05, -0.01, 1.02, 0.95])
 #        fig.canvas.set_window_title("%i"%(t))
         
     ax[0].plot([np.int((mesh_size[0]-1)/2) ,np.int((mesh_size[0]-1)/2) ] , [0 ,(mesh_size[1]-1) ],':',linewidth=1)
     ax[1].plot([np.int((mesh_size[0]-1)/2) ,np.int((mesh_size[0]-1)/2) ] , [0 ,(mesh_size[1]-1) ],':',linewidth=1)
         
-        
     ax[0].quiver(X, Y, p[0], p[1],headlength=0,headaxislength=0,headwidth=0,width=0.005,scale = 100,pivot='mid') #0.004 , 100
     ax0=ax[0].imshow(np.transpose(d) , cmap ="rainbow",vmin = 0)
     defs = defect_detector(q)
-    ax[0].set_title('Director field after %i steps\nD1= %i,%i|D2=%i,%i $\Delta$=%i'
-        %(t , defs[0], defs[1], defs[2], defs[3] , np.sqrt(defs[0]**2+defs[1]**2)-np.sqrt((defs[0]-defs[2])**2+(defs[1]-defs[3])**2)))
+    ax[0].set_title('Director field after %i steps\nD1= (%i,%i) | D2=(%i,%i) | $\Delta$=%i'
+        %(t , defs[0], defs[1], defs[2], defs[3] , np.sqrt((defs[0]-defs[2])**2+(defs[1]-defs[3])**2)),fontsize=8)
     ax[0].axis([-2,mesh_size[0]+1,-2,mesh_size[1]+1])
     clb = fig.colorbar(ax0,ax=ax[0] , orientation='vertical', shrink=0.5)
-    clb.ax.set_title('S')
+    clb.ax.set_title('$S$')
         
     psi = sparse_solver(w , sparse_matrix)
     
@@ -495,10 +494,10 @@ def export_plot(t,q,w,c,X,Y,sparse_matrix):
         
     ax[1].quiver(X, Y, v_x, v_y,headwidth=8,width=0.0023, scale = 33 * A)
     ax[1].imshow(np.transpose(c) , cmap ="rainbow",vmin =8)
-    ax[1].set_title('Velocity field after %i steps \n C_AVG = %.2f v_max = %.2f  (%i,%i)    E= %.2f  , R= %.2f  , alpha2=%.2f'
-        %(t,c_avg,A,high_speed[0],high_speed[1],E,R,alpha2[0]))
+    ax[1].set_title('Velocity field after %i steps \n<c>= %.2f, v_max=%.2f@(%i,%i), E=%.2f, R=%.2f, α^2=%.2f'
+        %(t,c_avg,A,high_speed[0],high_speed[1],E,R,alpha2[0]),fontsize=8)
     ax[1].axis([-2,mesh_size[0]+1,-2,mesh_size[1]+1])
     ax[1].set_aspect('equal')
-        
-    fig.savefig('%s/%i.png'%("results",t))
+    fig.subplots_adjust(wspace=0.02, hspace=0)
+    fig.savefig('%s/F%i.png'%("results",t/frame_step))
     plt.close()

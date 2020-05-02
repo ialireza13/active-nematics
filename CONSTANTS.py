@@ -3,6 +3,7 @@ import numpy as np
 V0 = 0 ## if you have other boundary conditions for velocity field other than no slip
 mesh_size = (80, 80)
 delta_t = 0.02
+frame_step = 100
 
 D1 = 1
 D0 = 1

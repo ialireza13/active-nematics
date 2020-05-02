@@ -4,7 +4,7 @@ import numpy as np
 import os
 import sys
 from nematics import dirich_sparse_matrix, export_plot, w_boundary, update, sparse_solver, initial
-from CONSTANTS import mesh_size
+from CONSTANTS import mesh_size, frame_step
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -61,10 +61,13 @@ def simulate(sim_time=100):
         w = w_temp
         c = c_temp
         
-        if (t%50 == 0):
+        if (t%frame_step == 0):
             export_plot(t,q,w,c,X,Y,sparse_matrix)
             print(t)
 
 if __name__ == '__main__':
-    simulate(500)
+    t=100
+    if len(sys.argv)>1:
+        t=int(sys.argv[1])
+    simulate(sim_time = t)
     print("--- %s seconds ---" % round(time.time() - start_time))
