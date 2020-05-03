@@ -34,7 +34,6 @@ def n (a):
 def order_parameter(xx,xy):
     return (np.sqrt(xx ** 2 + xy ** 2) ) * 2
 
-
 def HXX(q,c):
     hxx = np.zeros(mesh_size)
     
@@ -68,15 +67,13 @@ def HXX(q,c):
 
     hxx[-1][-1]= (- (c_star - c[-1][-1]) * q[-1][-1][0] - 4 * c[-1][-1] * (q[-1][-1][0]**3 +
         q[-1][-1][0] * q[-1][-1][1]**2) +  (q[-1][-1][0] + q[-2][-1][0] - 4 * q[-1][-1][0]
-        + q[-1][-1][0] + q[-1][-2][0] )/h2)
-    
+        + q[-1][-1][0] + q[-1][-2][0] )/h2)    
     
     hxx[1:-1,1:-1]= (- (c_star - c[1:-1,1:-1]) * q[1:-1,1:-1,0] - 4 * c[1:-1,1:-1] * (q[1:-1,1:-1,0]**3 +
         q[1:-1,1:-1,0] * q[1:-1,1:-1,1]**2) +  (q[2:,1:-1,0] + q[:-2,1:-1,0] - 4 * q[1:-1,1:-1,0]
         + q[1:-1,2:,0] + q[1:-1,:-2,0] ) /h2 )
 
     return hxx
-
 
 def HXY(q,c):
     hxy = np.zeros(mesh_size)
@@ -104,9 +101,9 @@ def HXY(q,c):
     hxy[0][-1]= (- (c_star - c[0][-1]) * q[0][-1][1] - 4 * c[0][-1] * (q[0][-1][1]**3 +
         q[0][-1][1] * q[0][-1][0]**2) +  (q[1][-1][1] + q[0][-1][1] - 4 * q[0][-1][1]
         + q[0][-1][1] + q[0][-2][1] )/h2)
-    
+
     hxy[-1][0]= (- (c_star - c[-1][0]) * q[-1][0][1] - 4 * c[-1][0] * (q[-1][0][1]**3 +
-        q[-1][0][1] * q[-1][0][0]**2) +  (q[-1][0][0] + q[-2][0][1] - 4 * q[-1][0][1]
+        q[-1][0][1] * q[-1][0][0]**2) +  (q[-1][0][1] + q[-2][0][1] - 4 * q[-1][0][1]
         + q[-1][1][1] + q[-1][0][1] )/h2)
 
     hxy[-1][-1]= (- (c_star - c[-1][-1]) * q[-1][-1][1] - 4 * c[-1][-1] * (q[-1][-1][1]**3 +
@@ -120,7 +117,6 @@ def HXY(q,c):
     return hxy
 
 # #### Stress tensors and derivatives:
-
 
 def SIGMA_X_X(q,hxx,c):
     sigma_x_x = np.zeros((mesh_size))
@@ -157,7 +153,6 @@ def DXDY_SIGMA_X_X(sigma_x_x):
     dxdy_sigma_x_x = np.zeros((mesh_size))
     dxdy_sigma_x_x[1:-1,1:-1] = ((sigma_x_x[2:,2:] - sigma_x_x[:-2,2:] - sigma_x_x[2:,:-2] + sigma_x_x[:-2,:-2])/(4*h2))
     return dxdy_sigma_x_x
-
 
 # #### Dirichlet boundary problem matrix for laplace equation using sparse matrix:
 
@@ -216,7 +211,6 @@ def w_boundary(w,psi):
 
 # #### Laplacian of $\omega$:
 
-
 def w_laplace(w):
     lpls_w = np.zeros((mesh_size))
     lpls_w[1:-1,1:-1] = ( w[2:,1:-1] + w[:-2,1:-1] - 4 * w[1:-1,1:-1] + w[1:-1,2:] + w[1:-1,:-2] )
@@ -250,30 +244,25 @@ def UXY(v_x,v_y):
 
 # #### Derivatives of $Q$:
 
-
 def DX_Q(q):
     dx_q = np.zeros((mesh_size[0],mesh_size[1],2))
     dx_q[1:-1,1:-1,:] = ( q[2:,1:-1,:] - q[:-2,1:-1,:] ) / h_h
     return dx_q
-
 
 def DY_Q(q):
     dy_q = np.zeros((mesh_size[0],mesh_size[1],2))
     dy_q[1:-1,1:-1,:] = ( q[1:-1,2:,:] - q[1:-1,:-2,:] ) / h_h
     return dy_q
 
-
 def D2X_QXX(q):
     d2x_qxx = np.zeros((mesh_size[0],mesh_size[1]))
     d2x_qxx[1:-1,1:-1] = ( q[2:,1:-1,0] + q[:-2,1:-1,0] - 2 * q[1:-1,1:-1,0]) / h2
     return d2x_qxx
 
-
 def D2Y_QXX(q):
     d2y_qxx = np.zeros((mesh_size[0],mesh_size[1]))
     d2y_qxx[1:-1,1:-1] = ( q[1:-1,2:,0] + q[1:-1,:-2,0] - 2 * q[1:-1,1:-1,0]) / h2
     return d2y_qxx
-
 
 def DXDY_QXY(q):
     dxdy_qxy = np.zeros((mesh_size[0],mesh_size[1]))
@@ -281,7 +270,6 @@ def DXDY_QXY(q):
     return dxdy_qxy
 
 # #### Derivatives of $c$ (concentration):
-
 
 def DX_C(c):
     dx_c = np.zeros((mesh_size))
@@ -300,13 +288,11 @@ def D2X_C(c):
     d2x_c[1:-1,1:-1] = ( c[2:,1:-1] + c[:-2,1:-1] - 2 * c[1:-1,1:-1] ) / h2
     return d2x_c
 
-
     
 def D2Y_C(c):
     d2y_c = np.zeros((mesh_size))
     d2y_c[1:-1,1:-1] = ( c[1:-1,2:] + c[1:-1,:-2] - 2 * c[1:-1,1:-1] )  / h2
     return d2y_c
-    
 
 def DXDY_C(c):
     dxdy_c = np.zeros((mesh_size))
@@ -359,13 +345,11 @@ def full_defect(q , neg , pos):
 
 # #### Convert $[i,j]$ to position:
 
-
 def pos_find(i,j):
     return j*mesh_size[0] + i
-
             
 def update(q_temp, c_temp, w_temp, psi):
-    
+
     hxx = HXX(q_temp,c_temp)
     hxy = HXY(q_temp,c_temp)
     sigma_x_x = SIGMA_X_X(q_temp,hxx,c_temp)
@@ -393,11 +377,9 @@ def update(q_temp, c_temp, w_temp, psi):
     d2y_c = D2Y_C(c_temp)
     dxdy_c = DXDY_C(c_temp)
 
-    
     w_rk = np.zeros((mesh_size))
     q_rk = np.zeros((mesh_size[0],mesh_size[1],2))
     c_rk = np.zeros((mesh_size))
-
     
     w_rk[0][0] = delta_t* ( E* lplas_w[0][0] + R* (d2x_sigma_y_x[0][0] - 2 * dxdy_sigma_x_x[0][0] - d2y_sigma_x_y[0][0]) )
     w_rk[-1][-1] = delta_t* ( E* lplas_w[-1][-1] + R* (d2x_sigma_y_x[-1][-1] - 2 * dxdy_sigma_x_x[-1][-1] - d2y_sigma_x_y[-1][-1]) )
