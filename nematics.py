@@ -299,13 +299,9 @@ def initial():
     c = np.ones((mesh_size[0],mesh_size[1])) * (3 * np.pi)
     w = np.zeros((mesh_size[0],mesh_size[1]))
     
-    q =full_defect(q , 10, 60) ## here you can set your defect location 
-    '''for i in range(mesh_size[0]):
-        for j in range(mesh_size[1]):
-            if j==0 or j==mesh_size[1]-1:
-                q[i][j][0] =  -1/np.sqrt(8)
-                q[i][j][1] =0'''
-                    
+    q = full_defect(q, (10,40), (70,40))
+    # q = full_defect(q, (10,70), (70,70))
+
     return q , c , w
 
 def ARC(x,y):
@@ -317,22 +313,19 @@ def ARC(x,y):
         return 2 * np.pi - np.arccos(x / np.sqrt(x**2 + y**2))
 
 def full_defect(q , neg , pos):
-    O = np.int( ( mesh_size[1] - 1 ) / 2 ) 
     for i in range (mesh_size[0]):
         for j in range (mesh_size[1]):
-            theta_pos = ARC ( i - pos , j - O  ) + np.pi
-            theta_neg = ARC ( i - neg , j - O ) 
-            theta_defective_area = theta_pos / 2  - theta_neg / 2
-             
-            if(i,j) == (neg , O):
-                q[i][j][0] = 1/np.sqrt(8)
-                q[i][j][1] = 0
-            if (i,j) == (pos,O):
-                q[i][j][0] = -1/np.sqrt(8)
-                q[i][j][1] = 0
-            else :
-                q[i][j][0] = 1/np.sqrt(8) * np.cos(2 * theta_defective_area )  
-                q[i][j][1] = 1/np.sqrt(8) * np.sin(2 * theta_defective_area )
+            theta_pos = ARC ( i - pos[0] , j - pos[1]  ) + np.pi
+            theta_neg = ARC ( i - neg[0] , j - neg[1] ) 
+            theta_defective_area = theta_pos / 2  - theta_neg / 2 
+            
+            q[i][j][0] = 1/np.sqrt(8) * np.cos(2 * theta_defective_area )  
+            q[i][j][1] = 1/np.sqrt(8) * np.sin(2 * theta_defective_area )
+
+    q[neg[0]][neg[1]][0] = 1/np.sqrt(8)
+    q[neg[0]][neg[1]][1] = 0
+    q[pos[0]][pos[1]][0] = -1/np.sqrt(8)
+    q[pos[0]][pos[1]][1] = 0
     return q
 
 # #### Convert $[i,j]$ to position:
