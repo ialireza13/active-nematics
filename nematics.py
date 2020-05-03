@@ -197,10 +197,10 @@ def sparse_solver(w , sparse_matrix):
     return spsolve(sparse_matrix , lin_w,use_umfpack=True).reshape((mesh_size)).T
 
 def w_boundary(w,psi):
-    w[0,:] = -2 *( psi[1,:] / h2 + V0 / h )
-    w[:,0] = -2 *( psi[:,1] / h2 + V0 / h )
-    w[-1,:] = -2 *( psi[-2,:] / h2 + V0 / h )
-    w[:,-1] = -2 *( psi[:,-2] / h2 + V0 / h )
+    w[0,:] = -2 *( psi[1,:] / h2 + V0_top / h )
+    w[:,0] = -2 *( psi[:,1] / h2 + V0_left / h )
+    w[-1,:] = -2 *( psi[-2,:] / h2 + V0_bottom / h )
+    w[:,-1] = -2 *( psi[:,-2] / h2 + V0_right / h )
     return w
 
 # #### Laplacian of $\omega$:
