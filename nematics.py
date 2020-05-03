@@ -30,7 +30,6 @@ def n (a):
 
 # #### Find $S$ (order parameter):
 
-        
 def order_parameter(xx,xy):
     return (np.sqrt(xx ** 2 + xy ** 2) ) * 2
 
@@ -123,13 +122,11 @@ def SIGMA_X_X(q,hxx,c):
     sigma_x_x[:,:] = ( -LAMBDA * order_parameter(q[:,:,0],q[:,:,1]) * hxx[:,:] + alpha2[:][0] * (c[:,:]**2) * q[:,:,0] ) 
     return sigma_x_x 
 
-
 def SIGMA_X_Y(q,hxx,hxy,c):
     sigma_x_y = np.zeros((mesh_size))    
     sigma_x_y[:,:] = ( -LAMBDA * order_parameter(q[:,:,0],q[:,:,1]) * hxy[:,:] +
         alpha2[:,0] * (c[:,:]**2) * q[:,:,1] + 2 * ( (q[:,:,0]) * hxy[:,:] - (q[:,:,1]) * hxx[:,:] ))
     return sigma_x_y
-
 
 def SIGMA_Y_X(q,hxx,hxy,c):
     sigma_y_x = np.zeros((mesh_size))    
@@ -137,12 +134,10 @@ def SIGMA_Y_X(q,hxx,hxy,c):
         alpha2[:,0] * (c[:,:]**2) * q[:,:,1] + 2 * ( (q[:,:,1]) * hxx[:,:] - (q[:,:,0]) * hxy[:,:] ))
     return sigma_y_x
 
-
 def D2X_SIGMA_Y_X(sigma_y_x):
     d2x_sigma_y_x = np.zeros((mesh_size))
     d2x_sigma_y_x[1:-1,1:-1] = ( sigma_y_x[2:,1:-1] + sigma_y_x[:-2,1:-1] - 2 * sigma_y_x[1:-1,1:-1] )/h2
     return d2x_sigma_y_x
-
 
 def D2Y_SIGMA_X_Y(sigma_x_y):
     d2y_sigma_x_y = np.zeros((mesh_size))
@@ -201,12 +196,11 @@ def sparse_solver(w , sparse_matrix):
     lin_w = lin_w.flatten()
     return spsolve(sparse_matrix , lin_w,use_umfpack=True).reshape((mesh_size)).T
 
-
 def w_boundary(w,psi):
-    w[0][:] = -2 *( psi[1][:] / h2 + V0 / h )
-    w[:][0] = -2 *( psi[:][1] / h2 + V0 / h )
-    w[-1][:] = -2 *( psi[-2][:] / h2 + V0 / h )
-    w[:][-1] = -2 *( psi[:][-2] / h2 + V0 / h )
+    w[0,:] = -2 *( psi[1,:] / h2 + V0 / h )
+    w[:,0] = -2 *( psi[:,1] / h2 + V0 / h )
+    w[-1,:] = -2 *( psi[-2,:] / h2 + V0 / h )
+    w[:,-1] = -2 *( psi[:,-2] / h2 + V0 / h )
     return w
 
 # #### Laplacian of $\omega$:
@@ -218,7 +212,6 @@ def w_laplace(w):
 
 # #### Flow velocity fields and their derivatives:
 
-
 def V_X(psi):
     v_x = np.zeros((mesh_size))
     v_x[1:-1,1:-1] = (psi[1:-1,2:] - psi[1:-1,:-2])/h_h
@@ -229,7 +222,6 @@ def V_Y(psi):
     v_y = np.zeros((mesh_size))
     v_y[1:-1,1:-1] = (-1) * ( psi[2:,1:-1] - psi[:-2,1:-1] ) / h_h
     return v_y
-
 
 def UXX(v_x):
     uxx = np.zeros((mesh_size))
@@ -405,7 +397,7 @@ def update(q_temp, c_temp, w_temp, psi):
         - v_x[1:-1,1:-1] * dx_c[1:-1,1:-1] - v_y[1:-1,1:-1] * dy_c[1:-1,1:-1] )
 
     return w_rk , q_rk , c_rk
-
+         
 # #### Defect detector:
 
 def defect_detector(q):
