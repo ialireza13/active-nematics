@@ -204,7 +204,7 @@ def sparse_solver(w , sparse_matrix):
     lin_w[:,-1] = 0
     lin_w[-1,:] = 0
     lin_w = lin_w.flatten()
-    return spsolve(sparse_matrix , lin_w).reshape((mesh_size)).T
+    return spsolve(sparse_matrix , lin_w,use_umfpack=True).reshape((mesh_size)).T
 
 
 def w_boundary(w,psi):
