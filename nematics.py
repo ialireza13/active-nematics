@@ -299,8 +299,7 @@ def initial():
     c = np.ones((mesh_size[0],mesh_size[1])) * (3 * np.pi)
     w = np.zeros((mesh_size[0],mesh_size[1]))
     
-    q = full_defect(q, [(10,10,0.5,np.pi),(10,70,-0.5,0) , (70,10,0.5,np.pi),(70,70,-0.5,0)])
-    # q = full_defect(q, (10,70), (70,70))
+    q = full_defect(q, [(20,40,0.5,np.pi),(60,40,0.5,0),(40,20,-0.5,np.pi),(40,60,-0.5,0)])
 
     return q , c , w
 
@@ -398,20 +397,17 @@ def update(q_temp, c_temp, w_temp, psi):
 def defect_detector(q):
     S = np.zeros((mesh_size))
     S[:,:] = abs( order_parameter(q[:,:,0] , q[:,:,1]) )
-    min_s = np.min(S)
-    max_s = np.max(S)
-    temp = np.where(S == min_s)
-    defect_1 = (temp[0][0] , temp[1][0])
     
-    S[defect_1[0]][defect_1[1]] = max_s
-    min_s = np.min(S)           
-    
-    temp = np.where(S == min_s)
-    defect_2 = (temp[0][0] , temp[1][0])
-    
-    defect = (defect_1[0] , defect_1[1] , defect_2[0] , defect_2[1])
-    
-    return defect
+    defects = []
+    while(True):
+        min_s = np.min(S)
+        max_s = np.max(S)
+        if (max_s - min_s)<0.5:
+            break
+        temp = np.where(S == min_s)
+        defects.append((temp[0][0], temp[1][0]))
+        S[temp[0][0]-2:temp[0][0]+2,temp[1][0]-2:temp[1][0]+2] = max_s
+    return defects
 
 # #### Plot:
 
@@ -428,22 +424,19 @@ def ploter(q):
     return p , d
 
 def export_plot(t,q,w,c,X,Y,sparse_matrix):
-#        plt.figure(t,figsize = (16,7))
-#        plot_number =plot_number + 1
     p,d = ploter(q)
-    #plt.subplot(2,4,plot_number)
+
     fig, ax = plt.subplots(1, 2 , figsize = (8,3.5))
     fig.tight_layout(rect=[-0.05, -0.01, 1.02, 0.95])
-#        fig.canvas.set_window_title("%i"%(t))
-        
+
     ax[0].plot([np.int((mesh_size[0]-1)/2) ,np.int((mesh_size[0]-1)/2) ] , [0 ,(mesh_size[1]-1) ],':',linewidth=1)
     ax[1].plot([np.int((mesh_size[0]-1)/2) ,np.int((mesh_size[0]-1)/2) ] , [0 ,(mesh_size[1]-1) ],':',linewidth=1)
         
     ax[0].quiver(X, Y, p[0], p[1],headlength=0,headaxislength=0,headwidth=0,width=0.005,scale = 100,pivot='mid') #0.004 , 100
     ax0=ax[0].imshow(np.transpose(d) , cmap ="rainbow",vmin = 0)
-    defs = defect_detector(q)
-    ax[0].set_title('Director field after %i steps\nD1= (%i,%i) | D2=(%i,%i) | $\Delta$=%i'
-        %(t , defs[0], defs[1], defs[2], defs[3] , np.sqrt((defs[0]-defs[2])**2+(defs[1]-defs[3])**2)),fontsize=8)
+    # defs = defect_detector(q)
+    ax[0].set_title('Director field after %i steps'
+        %t,fontsize=8)
     ax[0].axis([-2,mesh_size[0]+1,-2,mesh_size[1]+1])
     clb = fig.colorbar(ax0,ax=ax[0] , orientation='vertical', shrink=0.5)
     clb.ax.set_title('$S$')
