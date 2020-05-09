@@ -6,6 +6,7 @@ V0_left = 0
 V0_right = 0
 V0_bottom = 0
 mesh_size = (80, 80)
+defs_loc = [(20,40,0.5,np.pi),(60,40,0.5,0),(40,20,-0.5,np.pi),(40,60,-0.5,0)]
 delta_t = 0.02
 frame_step = 100
 

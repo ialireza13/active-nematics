@@ -299,7 +299,7 @@ def initial():
     c = np.ones((mesh_size[0],mesh_size[1])) * (3 * np.pi)
     w = np.zeros((mesh_size[0],mesh_size[1]))
     
-    q = full_defect(q, [(20,40,0.5,np.pi),(60,40,0.5,0),(40,20,-0.5,np.pi),(40,60,-0.5,0)])
+    q = full_defect(q, defs_loc)
 
     return q , c , w
 
