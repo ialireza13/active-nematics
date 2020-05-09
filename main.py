@@ -111,4 +111,24 @@ if __name__ == '__main__':
     if len(sys.argv)>1:
         t=int(sys.argv[1])
     simulate(sim_time = t)
+    if len(sys.argv)>2:
+        print("Generating animation...")
+        import cv2
+        import os
+        from tqdm import tqdm
+
+        image_folder = 'results'
+        video_name = sys.argv[2]+'.mp4'
+
+        images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+        frame = cv2.imread(os.path.join(image_folder, images[0]))
+        height, width, layers = frame.shape
+
+        video = cv2.VideoWriter(video_name,cv2.VideoWriter_fourcc(*'MP4V'), 10, (width,height))
+
+        for image in tqdm(images):
+            video.write(cv2.imread(os.path.join(image_folder, image)))
+
+        cv2.destroyAllWindows()
+        video.release()
     print("--- %s seconds ---" % round(time.time() - start_time))
