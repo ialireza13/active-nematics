@@ -202,7 +202,7 @@ if __name__ == '__main__':
     simulate(sim_time = t)
     if len(sys.argv)>2:
         print("Generating animation...")
-        import cv2
+        from cv2 import cv2
         import os
         from tqdm import tqdm
 
