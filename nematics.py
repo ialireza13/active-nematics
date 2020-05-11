@@ -407,7 +407,7 @@ def defect_detector(q):
         temp = np.where(S == min_s)
         defects.append((temp[0][0], temp[1][0]))
         S[temp[0][0]-2:temp[0][0]+2,temp[1][0]-2:temp[1][0]+2] = max_s
-    return defects
+    return np.array(defects)
 
 # #### Plot:
 
