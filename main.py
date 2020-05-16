@@ -109,7 +109,7 @@ def simulate(sim_time=-1):
                     tracers[i].write(str(t)+'    '+str(old_defs[i,0])+'    '+str(old_defs[i,1])+'\n')
                 export_plot(t,q,w,c,X,Y,sparse_matrix)
                 print(t)
-        for i in range(len(defs_loc)):
+        for i in range(len(tracers)):
             tracers[i].close()
     elif sim_time==-1:
         is_defect = True
@@ -192,7 +192,7 @@ def simulate(sim_time=-1):
                 n_defs = len(old_defs)
                 is_defect = n_defs>0
                 print("%s, #defects: %s"%(t, n_defs))
-        for i in range(len(defs_loc)):
+        for i in range(len(tracers)):
             tracers[i].close()
 
 if __name__ == '__main__':
