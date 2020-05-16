@@ -402,7 +402,7 @@ def defect_detector(q):
     while(True):
         min_s = np.min(S)
         max_s = np.max(S)
-        if (max_s - min_s)<0.5:
+        if (max_s - min_s)<0.3:
             break
         temp = np.where(S == min_s)
         defects.append((temp[0][0], temp[1][0]))
