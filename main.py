@@ -103,12 +103,20 @@ def simulate(sim_time=-1):
             
             if (t%frame_step == 0):
                 new_defs = defect_detector(q)
-                dists = cdist(old_defs, new_defs)
-                old_defs = new_defs[dists.argmin(axis=1)]
-                for i in range(len(old_defs)):
-                    tracers[i].write(str(t)+'    '+str(old_defs[i,0])+'    '+str(old_defs[i,1])+'\n')
-                export_plot(t,q,w,c,X,Y,sparse_matrix)
-                print(t)
+                try:
+                    dists = cdist(old_defs, new_defs)
+                    old_defs = new_defs[dists.argmin(axis=1)]
+                    for i in range(len(old_defs)):
+                        tracers[i].write(str(t)+'    '+str(old_defs[i,0])+'    '+str(old_defs[i,1])+'\n')
+                    export_plot(t,q,w,c,X,Y,sparse_matrix)
+                    print(t)
+                except ValueError:     # It means there are no more defects
+                    old_defs = []
+                    export_plot(t,q,w,c,X,Y,sparse_matrix)
+                    print(t)
+                    print("No more defects, terminating simulation...")
+                    break
+
         for i in range(len(tracers)):
             tracers[i].close()
     elif sim_time==-1:
@@ -187,7 +195,7 @@ def simulate(sim_time=-1):
                 try:
                     dists = cdist(old_defs, new_defs)
                     old_defs = new_defs[dists.argmin(axis=1)]
-                    for i in range(len(new_defs)):
+                    for i in range(len(old_defs)):
                         tracers[i].write(str(t)+'    '+str(old_defs[i,0])+'    '+str(old_defs[i,1])+'\n')
                 except ValueError:     # It means there are no more defects
                     old_defs = []
