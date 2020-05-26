@@ -187,7 +187,7 @@ def simulate(sim_time=-1):
                 try:
                     dists = cdist(old_defs, new_defs)
                     old_defs = new_defs[dists.argmin(axis=1)]
-                    for i in range(len(old_defs)):
+                    for i in range(len(new_defs)):
                         tracers[i].write(str(t)+'    '+str(old_defs[i,0])+'    '+str(old_defs[i,1])+'\n')
                 except ValueError:     # It means there are no more defects
                     old_defs = []
@@ -224,4 +224,6 @@ if __name__ == '__main__':
 
         cv2.destroyAllWindows()
         video.release()
+    with open('initial.txt', 'w') as f:
+        f.write(str(defs_loc))
     print("--- %s seconds ---" % round(time.time() - start_time))
