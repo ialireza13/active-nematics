@@ -809,28 +809,22 @@ def update(q_temp, c_temp, w_temp, psi):
     q_rk = np.zeros((mesh_size[0],mesh_size[1],2))
     c_rk = np.zeros((mesh_size))
     
-    w_rk[0][0] = delta_t* ( E* lplas_w[0][0] + R* (d2x_sigma_y_x[0][0] - 2 * dxdy_sigma_x_x[0][0] - d2y_sigma_x_y[0][0]) )
-    w_rk[-1][-1] = delta_t* ( E* lplas_w[-1][-1] + R* (d2x_sigma_y_x[-1][-1] - 2 * dxdy_sigma_x_x[-1][-1] - d2y_sigma_x_y[-1][-1]) )
-    w_rk[0][-1] = delta_t* ( E* lplas_w[0][-1] + R* (d2x_sigma_y_x[0][-1] - 2 * dxdy_sigma_x_x[0][-1] - d2y_sigma_x_y[0][-1]) )
-    w_rk[-1][0] = delta_t* ( E* lplas_w[-1][0] + R* (d2x_sigma_y_x[-1][0] - 2 * dxdy_sigma_x_x[-1][0] - d2y_sigma_x_y[-1][0]) )
+    w_rk = delta_t* ( E* lplas_w + R* (d2x_sigma_y_x - 2 * dxdy_sigma_x_x - d2y_sigma_x_y) )
     
-    w_rk[1:-1,1:-1] = delta_t* ( E* lplas_w[1:-1,1:-1] + R* (d2x_sigma_y_x[1:-1,1:-1]
-        - 2 * dxdy_sigma_x_x[1:-1,1:-1] - d2y_sigma_x_y[1:-1,1:-1]) )
-    
-    q_rk[1:-1,1:-1,0] = delta_t * ( LAMBDA * order_parameter(q_temp[1:-1,1:-1,0] , q_temp[1:-1,1:-1,1]) * uxx[1:-1,1:-1]
-        + hxx[1:-1,1:-1] -  q_temp[1:-1,1:-1,1]  * w_temp[1:-1,1:-1] - v_x[1:-1,1:-1] * dx_q[1:-1,1:-1,0] - 
-        v_y[1:-1,1:-1] * dy_q[1:-1,1:-1,0])
+    q_rk[:,:,0] = delta_t * ( LAMBDA * order_parameter(q_temp[:,:,0] , q_temp[:,:,1]) * uxx
+        + hxx - q_temp[:,:,1]  * w_temp - v_x * dx_q[:,:,0] - 
+        v_y * dy_q[:,:,0])
 
-    q_rk[1:-1,1:-1,1] = delta_t * ( LAMBDA * order_parameter(q_temp[1:-1,1:-1,0] , q_temp[1:-1,1:-1,1]) * uxy[1:-1,1:-1]
-        + hxy[1:-1,1:-1] +  q_temp[1:-1,1:-1,0] * w_temp[1:-1,1:-1] - v_x[1:-1,1:-1] * dx_q[1:-1,1:-1,1] - 
-        v_y[1:-1,1:-1] * dy_q[1:-1,1:-1,1])
+    q_rk[:,:,1] = delta_t * ( LAMBDA * order_parameter(q_temp[:,:,0] , q_temp[:,:,1]) * uxy
+        + hxy +  q_temp[:,:,0] * w_temp - v_x * dx_q[:,:,1] - 
+        v_y * dy_q[:,:,1])
 
-    c_rk[1:-1,1:-1] = delta_t * ( alpha1[1:-1,0] * c_temp[1:-1,1:-1]**2 * ( 2 * dxdy_qxy[1:-1,1:-1] + 
-        d2x_qxx[1:-1,1:-1] - d2y_qxx[1:-1,1:-1] ) + ( D1 + 2 * alpha1[1:-1,0] * c_temp[1:-1,1:-1] ) * ( 
-        dx_q[1:-1,1:-1,0] * dx_c[1:-1,1:-1] + dx_q[1:-1,1:-1,1] * dy_c[1:-1,1:-1] + dy_q[1:-1,1:-1,1] * dx_c[1:-1,1:-1]
-        - dy_q[1:-1,1:-1,0] * dy_c[1:-1,1:-1] ) + ( D0 + D1 * q_temp[1:-1,1:-1,0] ) * d2x_c[1:-1,1:-1]
-        + D1 * q_temp[1:-1,1:-1,1] * dxdy_c[1:-1,1:-1] + ( D0 - D1 * q_temp[1:-1,1:-1,0] ) * d2y_c[1:-1,1:-1] 
-        - v_x[1:-1,1:-1] * dx_c[1:-1,1:-1] - v_y[1:-1,1:-1] * dy_c[1:-1,1:-1] )
+    c_rk = delta_t * ( alpha1[:,0] * c_temp**2 * ( 2 * dxdy_qxy + 
+        d2x_qxx - d2y_qxx ) + ( D1 + 2 * alpha1[:,0] * c_temp ) * ( 
+        dx_q[:,:,0] * dx_c + dx_q[:,:,1] * dy_c + dy_q[:,:,1] * dx_c
+        - dy_q[:,:,0] * dy_c ) + ( D0 + D1 * q_temp[:,:,0] ) * d2x_c
+        + D1 * q_temp[:,:,1] * dxdy_c + ( D0 - D1 * q_temp[:,:,0] ) * d2y_c
+        - v_x * dx_c - v_y * dy_c )
 
     return w_rk , q_rk , c_rk
          
