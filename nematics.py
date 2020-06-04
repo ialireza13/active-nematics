@@ -35,39 +35,66 @@ def order_parameter(xx,xy):
 
 def HXX(q,c):
     hxx = np.zeros(mesh_size)
-    
+    # 1000
+    # 0000
+    # 0000
+    # 0000
     hxx[0][0]= (- (c_star - c[0][0]) * q[0][0][0] - 4 * c[0][0] * (q[0][0][0]**3 +
-        q[0][0][0] * q[0][0][1]**2) +  (q[1][0][0] + q[0][0][0] - 4 * q[0][0][0]
-        + q[0][1][0] + q[0][0][0] )/h2)
-    
+        q[0][0][0] * q[0][0][1]**2) +  (q[1][0][0] + q[bc_top][0][0] - 4 * q[0][0][0]
+        + q[0][1][0] + q[0][bc_left][0] )/h2)
+    # 0000
+    # 1000
+    # 1000
+    # 0000
     hxx[1:-1,0]= (- (c_star - c[1:-1,0]) * q[1:-1,0,0] - 4 * c[1:-1,0] * (q[1:-1,0,0]**3 +
         q[1:-1,0,0] * q[1:-1,0,1]**2) + (q[2:,0,0] + q[:-2,0,0] - 4 * q[1:-1,0,0]
-        + q[1:-1,1,0] + q[1:-1,0,0] )/h2)
-    
+        + q[1:-1,1,0] + q[1:-1,bc_left,0] )/h2)
+    # 0000
+    # 0001
+    # 0001
+    # 0000
     hxx[1:-1,-1]= (- (c_star - c[1:-1,-1]) * q[1:-1,-1,0] - 4 * c[1:-1,-1] * (q[1:-1,-1,0]**3 +
         q[1:-1,-1,0] * q[1:-1,-1,1]**2) +  (q[2:,-1,0] + q[:-2,-1,0] - 4 * q[1:-1,-1,0]
-        + q[1:-1,-1,0] + q[1:-1,-2,0] )/h2)
-        
+        + q[1:-1,bc_right,0] + q[1:-1,-2,0] )/h2)
+    # 0110
+    # 0000
+    # 0000
+    # 0000
     hxx[0,1:-1]= (- (c_star - c[0,1:-1]) * q[0,1:-1,0] - 4 * c[0,1:-1] * (q[0,1:-1,0]**3 +
-        q[0,1:-1,0] * q[0,1:-1,1]**2) +  (q[1,1:-1,0] + q[0,1:-1,0] - 4 * q[0,1:-1,0]
+        q[0,1:-1,0] * q[0,1:-1,1]**2) +  (q[1,1:-1,0] + q[bc_top,1:-1,0] - 4 * q[0,1:-1,0]
         + q[0,2:,0] + q[0,:-2,0] )/h2)
-    
+    # 0000
+    # 0000
+    # 0000
+    # 0110
     hxx[-1,1:-1]= (- (c_star - c[-1,1:-1]) * q[-1,1:-1,0] - 4 * c[-1,1:-1] * (q[-1,1:-1,0]**3 +
-        q[-1,1:-1,0] * q[-1,1:-1,1]**2) +  (q[-1,1:-1,0] + q[-2,1:-1,0] - 4 * q[-1,1:-1,0]
+        q[-1,1:-1,0] * q[-1,1:-1,1]**2) +  (q[bc_bottom,1:-1,0] + q[-2,1:-1,0] - 4 * q[-1,1:-1,0]
         + q[-1,2:,0] + q[-1,:-2,0] )/h2)
-    
+    # 0001
+    # 0000
+    # 0000
+    # 0000
     hxx[0][-1]= (- (c_star - c[0][-1]) * q[0][-1][0] - 4 * c[0][-1] * (q[0][-1][0]**3 +
-        q[0][-1][0] * q[0][-1][1]**2) +  (q[1][-1][0] + q[0][-1][0] - 4 * q[0][-1][0]
-        + q[0][-1][0] + q[0][-2][0] )/h2)
-    
+        q[0][-1][0] * q[0][-1][1]**2) +  (q[1][-1][0] + q[bc_top][-1][0] - 4 * q[0][-1][0]
+        + q[0][bc_right][0] + q[0][-2][0] )/h2)
+    # 0000
+    # 0000
+    # 0000
+    # 1000
     hxx[-1][0]= (- (c_star - c[-1][0]) * q[-1][0][0] - 4 * c[-1][0] * (q[-1][0][0]**3 +
-        q[-1][0][0] * q[-1][0][1]**2) +  (q[-1][0][0] + q[-2][0][0] - 4 * q[-1][0][0]
-        + q[-1][1][0] + q[-1][0][0] )/h2)
-
+        q[-1][0][0] * q[-1][0][1]**2) +  (q[bc_bottom][0][0] + q[-2][0][0] - 4 * q[-1][0][0]
+        + q[-1][1][0] + q[-1][bc_left][0] )/h2)
+    # 0000
+    # 0000
+    # 0000
+    # 0001
     hxx[-1][-1]= (- (c_star - c[-1][-1]) * q[-1][-1][0] - 4 * c[-1][-1] * (q[-1][-1][0]**3 +
-        q[-1][-1][0] * q[-1][-1][1]**2) +  (q[-1][-1][0] + q[-2][-1][0] - 4 * q[-1][-1][0]
-        + q[-1][-1][0] + q[-1][-2][0] )/h2)    
-    
+        q[-1][-1][0] * q[-1][-1][1]**2) +  (q[bc_bottom][-1][0] + q[-2][-1][0] - 4 * q[-1][-1][0]
+        + q[-1][bc_right][0] + q[-1][-2][0] )/h2)    
+    # 0000
+    # 0110
+    # 0110
+    # 0000
     hxx[1:-1,1:-1]= (- (c_star - c[1:-1,1:-1]) * q[1:-1,1:-1,0] - 4 * c[1:-1,1:-1] * (q[1:-1,1:-1,0]**3 +
         q[1:-1,1:-1,0] * q[1:-1,1:-1,1]**2) +  (q[2:,1:-1,0] + q[:-2,1:-1,0] - 4 * q[1:-1,1:-1,0]
         + q[1:-1,2:,0] + q[1:-1,:-2,0] ) /h2 )
@@ -76,39 +103,66 @@ def HXX(q,c):
 
 def HXY(q,c):
     hxy = np.zeros(mesh_size)
-    
+    # 1000
+    # 0000
+    # 0000
+    # 0000
     hxy[0][0]= (- (c_star - c[0][0]) * q[0][0][1] - 4 * c[0][0] * (q[0][0][1]**3 +
-        q[0][0][1] * q[0][0][0]**2) +  (q[1][0][1] + q[0][0][1] - 4 * q[0][0][1]
-        + q[0][1][1] + q[0][0][1] )/h2)
-    
+        q[0][0][1] * q[0][0][0]**2) +  (q[1][0][1] + q[bc_top][0][1] - 4 * q[0][0][1]
+        + q[0][1][1] + q[0][bc_left][1] )/h2)
+    # 0000
+    # 1000
+    # 1000
+    # 0000
     hxy[1:-1,0]= (- (c_star - c[1:-1,0]) * q[1:-1,0,1] - 4 * c[1:-1,0] * (q[1:-1,0,1]**3 +
         q[1:-1,0,1] * q[1:-1,0,0]**2) + (q[2:,0,1] + q[:-2,0,1] - 4 * q[1:-1,0,1]
-        + q[1:-1,1,1] + q[1:-1,0,1] )/h2)
-    
+        + q[1:-1,1,1] + q[1:-1,bc_left,1] )/h2)
+    # 0000
+    # 0001
+    # 0001
+    # 0000
     hxy[1:-1,-1]= (- (c_star - c[1:-1,-1]) * q[1:-1,-1,1] - 4 * c[1:-1,-1] * (q[1:-1,-1,1]**3 +
         q[1:-1,-1,1] * q[1:-1,-1,0]**2) +  (q[2:,-1,1] + q[:-2,-1,1] - 4 * q[1:-1,-1,1]
-        + q[1:-1,-1,1] + q[1:-1,-2,1] )/h2)
-        
+        + q[1:-1,bc_right,1] + q[1:-1,-2,1] )/h2)
+    # 0110
+    # 0000
+    # 0000
+    # 0000  
     hxy[0,1:-1]= (- (c_star - c[0,1:-1]) * q[0,1:-1,1] - 4 * c[0,1:-1] * (q[0,1:-1,1]**3 +
-        q[0,1:-1,1] * q[0,1:-1,0]**2) +  (q[1,1:-1,1] + q[0,1:-1,1] - 4 * q[0,1:-1,1]
+        q[0,1:-1,1] * q[0,1:-1,0]**2) +  (q[1,1:-1,1] + q[bc_top,1:-1,1] - 4 * q[0,1:-1,1]
         + q[0,2:,1] + q[0,:-2,1] )/h2)
-    
+    # 0000
+    # 0000
+    # 0000
+    # 0110
     hxy[-1,1:-1]= (- (c_star - c[-1,1:-1]) * q[-1,1:-1,1] - 4 * c[-1,1:-1] * (q[-1,1:-1,1]**3 +
-        q[-1,1:-1,1] * q[-1,1:-1,0]**2) +  (q[-1,1:-1,1] + q[-2,1:-1,1] - 4 * q[-1,1:-1,1]
+        q[-1,1:-1,1] * q[-1,1:-1,0]**2) +  (q[bc_bottom,1:-1,1] + q[-2,1:-1,1] - 4 * q[-1,1:-1,1]
         + q[-1,2:,1] + q[-1,:-2,1] )/h2)
-    
+    # 0001
+    # 0000
+    # 0000
+    # 0000
     hxy[0][-1]= (- (c_star - c[0][-1]) * q[0][-1][1] - 4 * c[0][-1] * (q[0][-1][1]**3 +
-        q[0][-1][1] * q[0][-1][0]**2) +  (q[1][-1][1] + q[0][-1][1] - 4 * q[0][-1][1]
-        + q[0][-1][1] + q[0][-2][1] )/h2)
-
+        q[0][-1][1] * q[0][-1][0]**2) +  (q[1][-1][1] + q[bc_top][-1][1] - 4 * q[0][-1][1]
+        + q[0][bc_right][1] + q[0][-2][1] )/h2)
+    # 0000
+    # 0000
+    # 0000
+    # 1000
     hxy[-1][0]= (- (c_star - c[-1][0]) * q[-1][0][1] - 4 * c[-1][0] * (q[-1][0][1]**3 +
-        q[-1][0][1] * q[-1][0][0]**2) +  (q[-1][0][1] + q[-2][0][1] - 4 * q[-1][0][1]
-        + q[-1][1][1] + q[-1][0][1] )/h2)
-
+        q[-1][0][1] * q[-1][0][0]**2) +  (q[bc_bottom][0][1] + q[-2][0][1] - 4 * q[-1][0][1]
+        + q[-1][1][1] + q[-1][bc_left][1] )/h2)
+    # 0000
+    # 0000
+    # 0000
+    # 0001
     hxy[-1][-1]= (- (c_star - c[-1][-1]) * q[-1][-1][1] - 4 * c[-1][-1] * (q[-1][-1][1]**3 +
-        q[-1][-1][1] * q[-1][-1][0]**2) +  (q[-1][-1][1] + q[-2][-1][1] - 4 * q[-1][-1][1]
-        + q[-1][-1][1] + q[-1][-2][1] )/h2)
-    
+        q[-1][-1][1] * q[-1][-1][0]**2) +  (q[bc_bottom][-1][1] + q[-2][-1][1] - 4 * q[-1][-1][1]
+        + q[-1][bc_right][1] + q[-1][-2][1] )/h2)
+    # 0000
+    # 0110
+    # 0110
+    # 0000
     hxy[1:-1,1:-1]= (- (c_star - c[1:-1,1:-1]) * q[1:-1,1:-1,1] - 4 * c[1:-1,1:-1] * (q[1:-1,1:-1,1]**3 +
         q[1:-1,1:-1,1] * q[1:-1,1:-1,0]**2) +  (q[2:,1:-1,1] + q[:-2,1:-1,1] - 4 * q[1:-1,1:-1,1]
         + q[1:-1,2:,1] + q[1:-1,:-2,1] ) /h2 )
@@ -136,16 +190,35 @@ def SIGMA_Y_X(q,hxx,hxy,c):
 
 def D2X_SIGMA_Y_X(sigma_y_x):
     d2x_sigma_y_x = np.zeros((mesh_size))
+    #sides
+    d2x_sigma_y_x[0,:] = ( sigma_y_x[1,:] + sigma_y_x[bc_top,:] - 2 * sigma_y_x[0,:] )/h2
+    d2x_sigma_y_x[-1,:] = ( sigma_y_x[bc_bottom,:] + sigma_y_x[-2,:] - 2 * sigma_y_x[-1,:] )/h2
+    # middle
     d2x_sigma_y_x[1:-1,1:-1] = ( sigma_y_x[2:,1:-1] + sigma_y_x[:-2,1:-1] - 2 * sigma_y_x[1:-1,1:-1] )/h2
     return d2x_sigma_y_x
 
 def D2Y_SIGMA_X_Y(sigma_x_y):
     d2y_sigma_x_y = np.zeros((mesh_size))
+    # sides
+    d2y_sigma_x_y[:,0] = ( sigma_x_y[:,1] + sigma_x_y[:,bc_left] - 2 * sigma_x_y[:,0] )/h2
+    d2y_sigma_x_y[:,-1] = ( sigma_x_y[:,bc_right] + sigma_x_y[:,-2] - 2 * sigma_x_y[:,-1] )/h2
+    # middle
     d2y_sigma_x_y[1:-1,1:-1] = ( sigma_x_y[1:-1,2:] + sigma_x_y[1:-1,:-2] - 2 * sigma_x_y[1:-1,1:-1] )/h2
     return d2y_sigma_x_y
 
 def DXDY_SIGMA_X_X(sigma_x_x):
     dxdy_sigma_x_x = np.zeros((mesh_size))
+    #corners
+    dxdy_sigma_x_x[0][0] = ((sigma_x_x[1][1] - sigma_x_x[bc_top][1] - sigma_x_x[1][bc_left] + sigma_x_x[bc_top][bc_left])/(4*h2))
+    dxdy_sigma_x_x[-1][-1] = ((sigma_x_x[bc_bottom][bc_right] - sigma_x_x[-2][bc_right] - sigma_x_x[bc_bottom][-2] + sigma_x_x[-2][-2])/(4*h2))
+    dxdy_sigma_x_x[-1][0] = ((sigma_x_x[bc_bottom][1] - sigma_x_x[-2][1] - sigma_x_x[bc_bottom][bc_left] + sigma_x_x[-2][bc_left])/(4*h2))
+    dxdy_sigma_x_x[0][-1] = ((sigma_x_x[1][bc_right] - sigma_x_x[bc_top][bc_right] - sigma_x_x[1][-2] + sigma_x_x[bc_top][-2])/(4*h2))
+    # sides
+    dxdy_sigma_x_x[0,1:-1] = ((sigma_x_x[1,2:] - sigma_x_x[bc_top,2:] - sigma_x_x[1,:-2] + sigma_x_x[bc_top,:-2])/(4*h2))
+    dxdy_sigma_x_x[-1,1:-1] = ((sigma_x_x[bc_bottom,2:] - sigma_x_x[-2,2:] - sigma_x_x[bc_bottom,:-2] + sigma_x_x[-2,:-2])/(4*h2))
+    dxdy_sigma_x_x[1:-1,0] = ((sigma_x_x[2:,1] - sigma_x_x[:-2,1] - sigma_x_x[2:,bc_left] + sigma_x_x[:-2,bc_left])/(4*h2))
+    dxdy_sigma_x_x[1:-1,-1] = ((sigma_x_x[2:,bc_right] - sigma_x_x[:-2,bc_right] - sigma_x_x[2:,-2] + sigma_x_x[:-2,-2])/(4*h2))
+    # middle
     dxdy_sigma_x_x[1:-1,1:-1] = ((sigma_x_x[2:,2:] - sigma_x_x[:-2,2:] - sigma_x_x[2:,:-2] + sigma_x_x[:-2,:-2])/(4*h2))
     return dxdy_sigma_x_x
 
@@ -155,33 +228,201 @@ def dirich_sparse_matrix():
     col = [  ]
     row = [  ]
     data = [  ]
-    for i in range (mesh_size[0]):
-        for j in range (mesh_size[1]):
+    for i in range (1,mesh_size[0]-1):
+        for j in range (1,mesh_size[1]-1):
+            row.append (  pos_find(i,j) )
+            row.append (  pos_find(i,j) )
+            row.append (  pos_find(i,j) )
+            row.append (  pos_find(i,j) )
+            row.append (  pos_find(i,j) )
             
-            if i!=0 and i!=mesh_size[0]-1 and j!=0 and j!=mesh_size[1]-1:
-                row.append (  pos_find(i,j) )
-                row.append (  pos_find(i,j) )
-                row.append (  pos_find(i,j) )
-                row.append (  pos_find(i,j) )
-                row.append (  pos_find(i,j) )
-                
-                col.append (  pos_find(i,j) )
-                col.append ( pos_find(i+1,j) )
-                col.append ( pos_find(i-1,j) )
-                col.append ( pos_find(i,j+1) )
-                col.append ( pos_find(i,j-1) )
-                
-                data.append ( -4 / h2 )
-                data.append ( 1 / h2 )
-                data.append ( 1 / h2 )
-                data.append ( 1 / h2 )
-                data.append ( 1 / h2 )
-                
-            else:
-                col.append (  pos_find(i,j)  )
-                row.append (  pos_find(i,j)  )
-                data.append ( 1 )
-                    
+            col.append (  pos_find(i,j) )
+            col.append ( pos_find(i+1,j) )
+            col.append ( pos_find(i-1,j) )
+            col.append ( pos_find(i,j+1) )
+            col.append ( pos_find(i,j-1) )
+            
+            data.append ( -4 / h2 )
+            data.append ( 1 / h2 )
+            data.append ( 1 / h2 )
+            data.append ( 1 / h2 )
+            data.append ( 1 / h2 )
+    if bc_top==0: # wall
+        for j in range(mesh_size[1]):
+            col.append (  pos_find(0,j)  )
+            row.append (  pos_find(0,j)  )
+            data.append ( 1 )
+            col.append (  pos_find(mesh_size[0]-1,j)  )
+            row.append (  pos_find(mesh_size[0]-1,j)  )
+            data.append ( 1 )
+    else:
+        # 0110
+        # 0000
+        # 0000
+        # 0000
+        for j in range(1,mesh_size[1]-1):
+            row.append (  pos_find(0,j)  )
+            row.append (  pos_find(0,j)  )
+            row.append (  pos_find(0,j)  )
+            row.append (  pos_find(0,j)  )
+            row.append (  pos_find(0,j)  )
+
+            col.append (  pos_find(0,j)  )
+            col.append (  pos_find(1,j)  )
+            col.append (  pos_find(mesh_size[0]-1,j)  )
+            col.append (  pos_find(0,j+1)  )
+            col.append (  pos_find(0,j-1)  )
+
+            data.append ( -4/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+        # 0000
+        # 0000
+        # 0000
+        # 0110
+        for j in range(1,mesh_size[1]-1):
+            row.append (  pos_find(mesh_size[0]-1,j)  )
+            row.append (  pos_find(mesh_size[0]-1,j)  )
+            row.append (  pos_find(mesh_size[0]-1,j)  )
+            row.append (  pos_find(mesh_size[0]-1,j)  )
+            row.append (  pos_find(mesh_size[0]-1,j)  )
+
+            col.append (  pos_find(mesh_size[0]-1,j)  )
+            col.append (  pos_find(0,j)  )
+            col.append (  pos_find(mesh_size[0]-2,j)  )
+            col.append (  pos_find(mesh_size[0]-1,j+1)  )
+            col.append (  pos_find(mesh_size[0]-1,j-1)  )
+
+            data.append ( -4/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+    if bc_left==0: # wall
+        for i in range(mesh_size[0]):
+            col.append (  pos_find(i,0)  )
+            row.append (  pos_find(i,0)  )
+            data.append ( 1 )
+            col.append (  pos_find(i,mesh_size[0]-1)  )
+            row.append (  pos_find(i,mesh_size[0]-1)  )
+            data.append ( 1 )
+    else:
+        # 0000
+        # 1000
+        # 1000
+        # 0000
+        for i in range(1,mesh_size[0]-1):
+            row.append (  pos_find(i,0)  )
+            row.append (  pos_find(i,0)  )
+            row.append (  pos_find(i,0)  )
+            row.append (  pos_find(i,0)  )
+            row.append (  pos_find(i,0)  )
+            
+            col.append (  pos_find(i,0)  )
+            col.append (  pos_find(i,1)  )
+            col.append (  pos_find(i,mesh_size[1]-1)  )
+            col.append (  pos_find(i+1,0)  )
+            col.append (  pos_find(i-1,0)  )
+
+            data.append ( -4/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+        # 0000
+        # 0001
+        # 0001
+        # 0000
+        for i in range(1,mesh_size[0]-1):
+            row.append (  pos_find(i,mesh_size[1]-1)  )
+            row.append (  pos_find(i,mesh_size[1]-1)  )
+            row.append (  pos_find(i,mesh_size[1]-1)  )
+            row.append (  pos_find(i,mesh_size[1]-1)  )
+            row.append (  pos_find(i,mesh_size[1]-1)  )
+            
+            col.append (  pos_find(i,mesh_size[1]-1)  )
+            col.append (  pos_find(i,0)  )
+            col.append (  pos_find(i,mesh_size[1]-2)  )
+            col.append (  pos_find(i+1,mesh_size[1]-1)  )
+            col.append (  pos_find(i-1,mesh_size[1]-1)  )
+
+            data.append ( -4/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+            data.append ( 1/h2 )
+    if (bc_left==-1 and bc_top==-1):
+        # 1000
+        # 0000
+        # 0000
+        # 0000
+        row.append (  pos_find(0,0)  )
+        row.append (  pos_find(0,0)  )
+        row.append (  pos_find(0,0)  )
+        row.append (  pos_find(0,0)  )
+        row.append (  pos_find(0,0)  )
+        col.append (  pos_find(0,0)  )
+        col.append (  pos_find(1,0)  )
+        col.append (  pos_find(0,1)  )
+        col.append (  pos_find(mesh_size[0]-1,0)  )
+        col.append (  pos_find(0,mesh_size[0]-1)  )
+        data.append ( -4/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        # 0001
+        # 0000
+        # 0000
+        # 0000
+        row.append (  pos_find(0,mesh_size[0]-1)  )
+        row.append (  pos_find(0,mesh_size[0]-1)  )
+        row.append (  pos_find(0,mesh_size[0]-1)  )
+        row.append (  pos_find(0,mesh_size[0]-1)  )
+        row.append (  pos_find(0,mesh_size[0]-1)  )
+        col.append (  pos_find(0,mesh_size[0]-1)  )
+        col.append (  pos_find(0,mesh_size[0]-2)  )
+        col.append (  pos_find(0,0)  )
+        col.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        col.append (  pos_find(1,mesh_size[0]-1)  )
+        data.append ( -4/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        # 0000
+        # 0000
+        # 0000
+        # 1000
+        row.append (  pos_find(mesh_size[0]-1,0)  )
+        row.append (  pos_find(mesh_size[0]-1,0)  )
+        row.append (  pos_find(mesh_size[0]-1,0)  )
+        row.append (  pos_find(mesh_size[0]-1,0)  )
+        row.append (  pos_find(mesh_size[0]-1,0)  )
+        col.append (  pos_find(mesh_size[0]-1,0)  )
+        col.append (  pos_find(mesh_size[0]-2,0)  )
+        col.append (  pos_find(0,0)  )
+        col.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        col.append (  pos_find(mesh_size[0]-1,1)  )
+        data.append ( -4/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        # 0000
+        # 0000
+        # 0000
+        # 0001
+        row.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        row.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        row.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        row.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        row.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        col.append (  pos_find(mesh_size[0]-1,mesh_size[0]-1)  )
+        col.append (  pos_find(mesh_size[0]-1,0)  )
+        col.append (  pos_find(mesh_size[0]-1,mesh_size[0]-2)  )
+        col.append (  pos_find(mesh_size[0]-2,mesh_size[0]-1)  )
+        col.append (  pos_find(0,mesh_size[0]-1)  )
+        data.append ( -4/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        data.append ( 1/h2 )
+        
     return csr_matrix((data , (row , col)) , shape = 
                       (mesh_size[0] * mesh_size[1] , mesh_size[0] * mesh_size[1]))
 
@@ -197,16 +438,66 @@ def sparse_solver(w , sparse_matrix):
     return spsolve(sparse_matrix , lin_w,use_umfpack=True).reshape((mesh_size)).T
 
 def w_boundary(w,psi):
-    w[0,:] = -2 *( psi[1,:] / h2 + V0_top / h )
-    w[:,0] = -2 *( psi[:,1] / h2 + V0_left / h )
-    w[-1,:] = -2 *( psi[-2,:] / h2 + V0_bottom / h )
-    w[:,-1] = -2 *( psi[:,-2] / h2 + V0_right / h )
+    if bc_top==0: # wall
+        # top
+        w[0,:] = -2 *( psi[1,:] / h2 + V0_top / h )
+        # bottom
+        w[-1,:] = -2 *( psi[-2,:] / h2 + V0_bottom / h )
+    if bc_left==0:
+        # left
+        w[:,0] = -2 *( psi[:,1] / h2 + V0_left / h )
+        # right
+        w[:,-1] = -2 *( psi[:,-2] / h2 + V0_right / h )
     return w
 
 # #### Laplacian of $\omega$:
 
 def w_laplace(w):
     lpls_w = np.zeros((mesh_size))
+    # 1000
+    # 0000
+    # 0000
+    # 0000
+    lpls_w[0][0] = (w[1][0]+w[bc_top][0]-4*w[0][0]+w[0][1]+w[0][bc_left])
+    # 0001
+    # 0000
+    # 0000
+    # 0000
+    lpls_w[0][-1] = (w[1][-1]+w[bc_top][-1]-4*w[0][-1]+w[0][bc_right]+w[0][-2])
+    # 0000
+    # 0000
+    # 0000
+    # 0001
+    lpls_w[-1][-1] = (w[bc_bottom][-1]+w[-2][-1]-4*w[-1][-1]+w[-1][bc_right]+w[-1][-2])
+    # 0000
+    # 0000
+    # 0000
+    # 1000
+    lpls_w[-1][0] = (w[bc_bottom][0]+w[-2][0]-4*w[-1][0]+w[-1][1]+w[-1][bc_left])
+    # 0110
+    # 0000
+    # 0000
+    # 0000
+    lpls_w[0,1:-1] = ( w[1,1:-1] + w[bc_top,1:-1] - 4 * w[0,1:-1] + w[0,2:] + w[0,:-2] )
+    # 0000
+    # 0000
+    # 0000
+    # 0110
+    lpls_w[-1,1:-1] = ( w[bc_bottom,1:-1] + w[-2,1:-1] - 4 * w[-1,1:-1] + w[-1,2:] + w[-1,:-2] )
+    # 0000
+    # 0001
+    # 0001
+    # 0000
+    lpls_w[1:-1,-1] = ( w[2:,-1] + w[:-2,-1] - 4 * w[1:-1,-1] + w[1:-1,bc_right] + w[1:-1,-2] )
+    # 0000
+    # 1000
+    # 1000
+    # 0000
+    lpls_w[1:-1,0] = ( w[2:,0] + w[:-2,0] - 4 * w[1:-1,0] + w[1:-1,1] + w[1:-1,bc_left] )
+    # 0000
+    # 0110
+    # 0110
+    # 0000
     lpls_w[1:-1,1:-1] = ( w[2:,1:-1] + w[:-2,1:-1] - 4 * w[1:-1,1:-1] + w[1:-1,2:] + w[1:-1,:-2] )
     return lpls_w
 
@@ -214,23 +505,73 @@ def w_laplace(w):
 
 def V_X(psi):
     v_x = np.zeros((mesh_size))
-    v_x[1:-1,1:-1] = (psi[1:-1,2:] - psi[1:-1,:-2])/h_h
+    v_x[:,0] = (psi[:,1] - psi[:,bc_left])/h_h
+    v_x[:,-1] = (psi[:,bc_right] - psi[:,-2])/h_h
+    v_x[:,1:-1] = (psi[:,2:] - psi[:,:-2])/h_h
     return v_x
     
 
 def V_Y(psi):
     v_y = np.zeros((mesh_size))
-    v_y[1:-1,1:-1] = (-1) * ( psi[2:,1:-1] - psi[:-2,1:-1] ) / h_h
+    v_y[0,:] = ( psi[bc_top,:] - psi[1,:] ) / h_h
+    v_y[-1,:] = ( psi[-2,:] - psi[bc_bottom,:] ) / h_h
+    v_y[1:-1,:] = ( psi[:-2,:] - psi[2:,:] ) / h_h
     return v_y
 
 def UXX(v_x):
     uxx = np.zeros((mesh_size))
-    uxx[1:-1,1:-1] = ( v_x[2:,1:-1] - v_x[:-2,1:-1] )/ h_h
+    uxx[0,:] = ( v_x[1,:] - v_x[bc_top,:] )/ h_h
+    uxx[-1,:] = ( v_x[bc_bottom,:] - v_x[-2,:] )/ h_h
+    uxx[1:-1,:] = ( v_x[2:,:] - v_x[:-2,:] )/ h_h
     return uxx
 
 
 def UXY(v_x,v_y):
     uxy = np.zeros((mesh_size))
+    # 1000
+    # 0000
+    # 0000
+    # 0000
+    uxy[0][0] = ( v_y[1][0] - v_y[bc_top][0] + v_x[0][1] - v_x[0][bc_left] ) /  h_h_h_h
+    # 0000
+    # 0000
+    # 0000
+    # 0001
+    uxy[-1][-1] = ( v_y[bc_bottom][-1] - v_y[-2][-1] + v_x[-1][bc_right] - v_x[-1][-2] ) /  h_h_h_h
+    # 0000
+    # 0000
+    # 0000
+    # 1000
+    uxy[-1][0] = ( v_y[bc_bottom][0] - v_y[-2][0] + v_x[-1][1] - v_x[-1][bc_left] ) /  h_h_h_h
+    # 0001
+    # 0000
+    # 0000
+    # 0000
+    uxy[0][-1] = ( v_y[1][-1] - v_y[bc_top][-1] + v_x[0][bc_right] - v_x[0][-2] ) /  h_h_h_h
+    # 0110
+    # 0000
+    # 0000
+    # 0000
+    uxy[0,1:-1] = ( v_y[1,1:-1] - v_y[bc_top,1:-1] + v_x[0,2:] - v_x[0,:-2] ) /  h_h_h_h
+    # 0000
+    # 0000
+    # 0000
+    # 0110
+    uxy[-1,1:-1] = ( v_y[bc_bottom,1:-1] - v_y[-2,1:-1] + v_x[-1,2:] - v_x[-1,:-2] ) /  h_h_h_h
+    # 0000
+    # 1000
+    # 1000
+    # 0000
+    uxy[1:-1,0] = ( v_y[2:,0] - v_y[:-2,0] + v_x[1:-1,1] - v_x[1:-1,bc_left] ) /  h_h_h_h
+    # 0000
+    # 0001
+    # 0001
+    # 0000
+    uxy[1:-1,-1] = ( v_y[2:,-1] - v_y[:-2,-1] + v_x[1:-1,bc_right] - v_x[1:-1,-2] ) /  h_h_h_h
+    # 0000
+    # 0110
+    # 0110
+    # 0000
     uxy[1:-1,1:-1] = ( v_y[2:,1:-1] - v_y[:-2,1:-1] + v_x[1:-1,2:] - v_x[1:-1,:-2] ) /  h_h_h_h
     return uxy
 
@@ -238,26 +579,78 @@ def UXY(v_x,v_y):
 
 def DX_Q(q):
     dx_q = np.zeros((mesh_size[0],mesh_size[1],2))
-    dx_q[1:-1,1:-1,:] = ( q[2:,1:-1,:] - q[:-2,1:-1,:] ) / h_h
+    dx_q[0,:,:] = ( q[1,:,:] - q[bc_top,:,:] ) / h_h
+    dx_q[-1,:,:] = ( q[bc_bottom,:,:] - q[-2,:,:] ) / h_h
+    dx_q[1:-1,:,:] = ( q[2:,:,:] - q[:-2,:,:] ) / h_h
     return dx_q
 
 def DY_Q(q):
     dy_q = np.zeros((mesh_size[0],mesh_size[1],2))
-    dy_q[1:-1,1:-1,:] = ( q[1:-1,2:,:] - q[1:-1,:-2,:] ) / h_h
+    dy_q[:,0,:] = ( q[:,1,:] - q[:,bc_left,:] ) / h_h
+    dy_q[:,-1,:] = ( q[:,bc_right,:] - q[:,-2,:] ) / h_h
+    dy_q[:,1:-1,:] = ( q[:,2:,:] - q[:,:-2,:] ) / h_h
     return dy_q
 
 def D2X_QXX(q):
     d2x_qxx = np.zeros((mesh_size[0],mesh_size[1]))
-    d2x_qxx[1:-1,1:-1] = ( q[2:,1:-1,0] + q[:-2,1:-1,0] - 2 * q[1:-1,1:-1,0]) / h2
+    d2x_qxx[0,:] = ( q[1,:,0] + q[bc_left,:,0] - 2 * q[0,:,0]) / h2
+    d2x_qxx[-1,:] = ( q[bc_right,:,0] + q[-2,:,0] - 2 * q[-1,:,0]) / h2
+    d2x_qxx[1:-1,:] = ( q[2:,:,0] + q[:-2,:,0] - 2 * q[1:-1,:,0]) / h2
     return d2x_qxx
 
 def D2Y_QXX(q):
     d2y_qxx = np.zeros((mesh_size[0],mesh_size[1]))
-    d2y_qxx[1:-1,1:-1] = ( q[1:-1,2:,0] + q[1:-1,:-2,0] - 2 * q[1:-1,1:-1,0]) / h2
+    d2y_qxx[:,0] = ( q[:,1,0] + q[:,bc_top,0] - 2 * q[:,0,0]) / h2
+    d2y_qxx[:,-1] = ( q[:,bc_bottom,0] + q[:,-2,0] - 2 * q[:,-1,0]) / h2
+    d2y_qxx[:,1:-1] = ( q[:,2:,0] + q[:,:-2,0] - 2 * q[:,1:-1,0]) / h2
     return d2y_qxx
 
 def DXDY_QXY(q):
     dxdy_qxy = np.zeros((mesh_size[0],mesh_size[1]))
+    # 1000
+    # 0000
+    # 0000
+    # 0000
+    dxdy_qxy[0][0] = ( q[1][1][1] - q[bc_top][1][1] - q[1][bc_left][1] + q[bc_top][bc_left][1] ) / h_h_h_h
+    # 0000
+    # 0000
+    # 0000
+    # 0001
+    dxdy_qxy[-1][-1] = ( q[bc_bottom][bc_right][1] - q[-2][bc_right][1] - q[bc_bottom][-2][1] + q[-2][-2][1] ) / h_h_h_h
+    # 0000
+    # 0000
+    # 0000
+    # 1000
+    dxdy_qxy[-1][0] = ( q[bc_bottom][1][1] - q[-2][1][1] - q[bc_bottom][bc_left][1] + q[-2][bc_left][1] ) / h_h_h_h    
+    # 0001
+    # 0000
+    # 0000
+    # 0000
+    dxdy_qxy[0][-1] = ( q[1][bc_right][1] - q[bc_top][bc_right][1] - q[1][-2][1] + q[bc_top][-2][1] ) / h_h_h_h
+    # 0110
+    # 0000
+    # 0000
+    # 0000
+    dxdy_qxy[0,1:-1] = ( q[1,2:,1] - q[bc_top,2:,1] - q[1,:-2,1] + q[bc_top,:-2,1] ) / h_h_h_h
+    # 0000
+    # 0000
+    # 0000
+    # 0110
+    dxdy_qxy[-1,1:-1] = ( q[bc_bottom,2:,1] - q[-2,2:,1] - q[bc_bottom,:-2,1] + q[-2,:-2,1] ) / h_h_h_h
+    # 0000
+    # 1000
+    # 1000
+    # 0000
+    dxdy_qxy[1:-1,0] = ( q[2:,1,1] - q[:-2,1,1] - q[2:,bc_left,1] + q[:-2,bc_left,1] ) / h_h_h_h
+    # 0000
+    # 0001
+    # 0001
+    # 0000
+    dxdy_qxy[1:-1,-1] = ( q[2:,bc_right,1] - q[:-2,bc_right,1] - q[2:,-2,1] + q[:-2,-2,1] ) / h_h_h_h
+    # 0000
+    # 0110
+    # 0110
+    # 0000
     dxdy_qxy[1:-1,1:-1] = ( q[2:,2:,1] - q[:-2,2:,1] - q[2:,:-2,1] + q[:-2,:-2,1] ) / h_h_h_h
     return dxdy_qxy
 
@@ -265,29 +658,78 @@ def DXDY_QXY(q):
 
 def DX_C(c):
     dx_c = np.zeros((mesh_size))
-    dx_c[1:-1,1:-1] = ( c[2:,1:-1] - c[:-2,1:-1] ) / h_h
+    dx_c[0,:] = ( c[1,:] - c[bc_top,:] ) / h_h
+    dx_c[-1,:] = ( c[bc_bottom,:] - c[-2,:] ) / h_h
+    dx_c[1:-1,:] = ( c[2:,:] - c[:-2,:] ) / h_h
     return dx_c
-
 
 def DY_C(c):
     dy_c = np.zeros((mesh_size))
-    dy_c[1:-1,1:-1] = ( c[1:-1,2:] - c[1:-1,:-2] ) / h_h
+    dy_c[:,0] = ( c[:,1] - c[:,bc_left] ) / h_h
+    dy_c[:,-1] = ( c[:,bc_right] - c[:,-2] ) / h_h
+    dy_c[:,1:-1] = ( c[:,2:] - c[:,:-2] ) / h_h
     return dy_c
-
 
 def D2X_C(c):
     d2x_c = np.zeros((mesh_size))
-    d2x_c[1:-1,1:-1] = ( c[2:,1:-1] + c[:-2,1:-1] - 2 * c[1:-1,1:-1] ) / h2
+    d2x_c[0,:] = ( c[1,:] + c[bc_top,:] - 2 * c[0,:] ) / h2
+    d2x_c[-1,:] = ( c[bc_bottom,:] + c[-2,:] - 2 * c[-1,:] ) / h2
+    d2x_c[1:-1,:] = ( c[2:,:] + c[:-2,:] - 2 * c[1:-1,:] ) / h2
     return d2x_c
 
-    
 def D2Y_C(c):
     d2y_c = np.zeros((mesh_size))
-    d2y_c[1:-1,1:-1] = ( c[1:-1,2:] + c[1:-1,:-2] - 2 * c[1:-1,1:-1] )  / h2
+    d2y_c[:,0] = ( c[:,1] + c[:,bc_left] - 2 * c[:,0] )  / h2
+    d2y_c[:,-1] = ( c[:,bc_right] + c[:,-2] - 2 * c[:,-1] )  / h2
+    d2y_c[:,1:-1] = ( c[:,2:] + c[:,:-2] - 2 * c[:,1:-1] )  / h2
     return d2y_c
 
 def DXDY_C(c):
     dxdy_c = np.zeros((mesh_size))
+    # 1000
+    # 0000
+    # 0000
+    # 0000
+    dxdy_c[0][0] = ( c[1][1] - c[bc_top][1] - c[1][bc_left] + c[bc_top][bc_left] ) / (4*h2)
+    # 0000
+    # 0000
+    # 0000
+    # 0001
+    dxdy_c[-1][-1] = ( c[bc_bottom][bc_right] - c[-2][bc_right] - c[bc_bottom][-2] + c[-2][-2] ) / (4*h2)
+    # 0000
+    # 0000
+    # 0000
+    # 1000
+    dxdy_c[-1][0] = ( c[bc_bottom][1] - c[-2][1] - c[bc_bottom][bc_left] + c[-2][bc_left] ) / (4*h2)
+    # 0001
+    # 0000
+    # 0000
+    # 0000
+    dxdy_c[0][-1] = ( c[1][bc_right] - c[bc_top][bc_right] - c[1][-2] + c[bc_top][-2] ) / (4*h2)
+    # 0110
+    # 0000
+    # 0000
+    # 0000
+    dxdy_c[0,1:-1] = ( c[1,2:] - c[bc_top,2:] - c[1,:-2] + c[bc_top,:-2] ) / (4*h2)
+    # 0000
+    # 0000
+    # 0000
+    # 0110
+    dxdy_c[-1,1:-1] = ( c[bc_bottom,2:] - c[-2,2:] - c[bc_bottom,:-2] + c[-2,:-2] ) / (4*h2)
+    # 0000
+    # 1000
+    # 1000
+    # 0000
+    dxdy_c[1:-1,0] = ( c[2:,1] - c[:-2,1] - c[2:,bc_left] + c[:-2,bc_left] ) / (4*h2)
+    # 0000
+    # 0001
+    # 0001
+    # 0000
+    dxdy_c[1:-1,-1] = ( c[2:,bc_right] - c[:-2,bc_right] - c[2:,-2] + c[:-2,-2] ) / (4*h2)
+    # 0000
+    # 0110
+    # 0110
+    # 0000
     dxdy_c[1:-1,1:-1] = ( c[2:,2:] - c[:-2,2:] - c[2:,:-2] + c[:-2,:-2] ) / (4*h2)
     return dxdy_c
 
@@ -333,7 +775,7 @@ def full_defect(q , d):
 
 def pos_find(i,j):
     return j*mesh_size[0] + i
-            
+
 def update(q_temp, c_temp, w_temp, psi):
 
     hxx = HXX(q_temp,c_temp)
@@ -432,7 +874,7 @@ def export_plot(t,q,w,c,X,Y,sparse_matrix):
     ax[0].plot([np.int((mesh_size[0]-1)/2) ,np.int((mesh_size[0]-1)/2) ] , [0 ,(mesh_size[1]-1) ],':',linewidth=1)
     ax[1].plot([np.int((mesh_size[0]-1)/2) ,np.int((mesh_size[0]-1)/2) ] , [0 ,(mesh_size[1]-1) ],':',linewidth=1)
         
-    ax[0].quiver(X, Y, p[0], p[1],headlength=0,headaxislength=0,headwidth=0,width=0.005,scale = 100,pivot='mid') #0.004 , 100
+    ax[0].quiver(X, Y, p[0], p[1],headlength=0,headaxislength=0,headwidth=0,width=0.005,scale = mesh_size[0]*1.25,pivot='mid') #0.004 , 100
     ax0=ax[0].imshow(np.transpose(d) , cmap ="rainbow",vmin = 0)
     # defs = defect_detector(q)
     ax[0].set_title('Director field after %i steps'
