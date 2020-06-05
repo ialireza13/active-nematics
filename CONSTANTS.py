@@ -23,7 +23,7 @@ bc_bottom = -1
 # bc_bottom = -1
 
 mesh_size = (80, 80)
-defs_loc = [[30,40,0.5,np.pi/3],[50,50,-0.5,0]]
+defs_loc = [[20,40,0.5,np.pi],[60,40,-0.5,0]]
 delta_t = 0.02
 frame_step = 50
 
