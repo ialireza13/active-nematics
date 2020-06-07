@@ -7,23 +7,23 @@ V0_right = 0
 V0_bottom = 0
 ## boundary conditions
 ## wall
-bc_right = -1
-bc_left = 0
-bc_top = 0
-bc_bottom = -1
+# bc_right = -1
+# bc_left = 0
+# bc_top = 0
+# bc_bottom = -1
 ## periodic
-# bc_right = 0
-# bc_left = -1
-# bc_top = -1
-# bc_bottom = 0
+bc_right = 0
+bc_left = -1
+bc_top = -1
+bc_bottom = 0
 ## tunnel
 # bc_right = 0
 # bc_left = -1
 # bc_top = 0
 # bc_bottom = -1
 
-mesh_size = (80, 80)
-defs_loc = [[20,40,0.5,np.pi],[60,40,-0.5,0]]
+mesh_size = (160, 160)
+defs_loc = [[80,20,0.5,np.pi],[80,60,-0.5,0]]
 delta_t = 0.02
 frame_step = 50
 
