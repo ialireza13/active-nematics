@@ -991,17 +991,17 @@ def export_plot(t,q,w,c,X,Y,sparse_matrix):
     plt.close()
 
 def force_calculator(traj1, traj2):
-    sx = 0
-    stx = 0
-    st2x = 0
-    st = 0
-    st2 = 0
-    st3 = 0
-    st4 = 0
     n = traj1.shape[0]
     v = np.zeros(n)
     a = np.zeros(n)
     for t in range(n):
+        sx = 0
+        stx = 0
+        st2x = 0
+        st = 0
+        st2 = 0
+        st3 = 0
+        st4 = 0
         for i in range(n):
             ti = traj1[i,0] - t
             sx += traj1[i,1]
