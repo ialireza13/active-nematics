@@ -9,6 +9,12 @@ from scipy.spatial.distance import cdist
 import warnings
 warnings.filterwarnings("ignore")
 
+import re
+def sorted_alphanumeric(data):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(data, key=alphanum_key)
+
 def simulate(sim_time=-1):
 
     folder_name = 'results'
@@ -222,6 +228,7 @@ if __name__ == '__main__':
         video_name = sys.argv[2]+'.mp4'
 
         images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+        images = sorted_alphanumeric(images)
         frame = cv2.imread(os.path.join(image_folder, images[0]))
         height, width, layers = frame.shape
 
