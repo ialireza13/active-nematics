@@ -978,7 +978,7 @@ def export_plot(t,q,w,c,X,Y,sparse_matrix):
         
     c_avg = np.mean(c)
         
-    ax[1].quiver(X[::3,::3], Y[::3,::3], v_x[::3,::3], v_y[::3,::3],headwidth=mesh_size[0]/10,width=0.3*mesh_size[0]*1e-4, scale = 10 * A)
+    ax[1].quiver(X[::3,::3], Y[::3,::3], v_x[::3,::3], v_y[::3,::3])
     ax1 = ax[1].imshow(np.transpose(c) , cmap ="hot")
     clb2 = fig.colorbar(ax1,ax=ax[1] , orientation='vertical', shrink=0.5)
     clb2.ax.set_title('$c$')
