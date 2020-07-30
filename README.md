@@ -4,6 +4,7 @@ A Python package for studying the topological defects in active nematics.
 ### Sample output
 <img src="https://github.com/ialireza13/active-nematics/raw/master/examples/F3.png" alt="Sample output">
 
+Developed by: Alireza Hashemi
 Code core & main functions developed by: Mohammadreza Fazelzadeh
 
 ### Use:
